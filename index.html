@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PawPrint — Clone</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: Poppins and Questrial -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Questrial&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- Material Symbols -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+    <style>
+      body {
+        font-family: "Questrial", system-ui, sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      .btn-ghost,
+      nav,
+      .cta-wrap,
+      .features h2 {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-[#7a3f1a]">
+    <!-- Header -->
+    <header class="relative pt-9 px-5 flex justify-center items-center">
+      <nav
+        aria-label="Main navigation"
+        class="flex gap-9 font-poppins font-bold uppercase text-[#e26215] text-[20px] tracking-[1px]"
+      >
+        <a href="#" class="no-underline text-inherit">HOME</a>
+        <a href="#" class="no-underline text-inherit">TEST</a>
+        <a href="#" class="no-underline text-inherit">ABOUT</a>
+      </nav>
+    </header>
+
+    <!-- Hero/Main -->
+    <main>
+      <div
+        class="w-full flex items-center justify-center gap-[190px] px-5 pt-[70px] pb-48"
+      >
+        <div
+          class="min-w-[320px] pl-32 flex flex-col items-center gap-7 text-center"
+        >
+          <img
+            src="images/logo.png"
+            alt="Paw Print logo"
+            class="w-[360px] max-w-full block"
+          />
+          <p class="max-w-[420px] text-[20px] leading-[1.6] text-[#8a4f2a] m-0">
+            Upload a photo and let our free AI classifier instantly identify
+            your dog's breed in seconds.
+          </p>
+          <div class="mt-1 flex justify-center items-center gap-4.5 w-full">
+            <a
+              class="btn-ghost font-poppins font-bold text-[20px] px-9 py-[18px] rounded-full border-4 border-[#e26215] bg-transparent text-[#e26215] no-underline inline-block shadow-[0_6px_0_rgba(0,0,0,0.02)] transition-all duration-150 hover:-translate-y-1 hover:bg-[#e26215] hover:text-white hover:border-[#cc500f]"
+              href="#"
+              >TRY FOR FREE</a
+            >
+          </div>
+        </div>
+        <div class="flex items-center justify-center relative min-h-[420px]">
+          <img
+            src="images/dog.png"
+            alt="Corgi dog jumping"
+            class="w-[650px] max-w-full block relative z-10"
+          />
+          <div
+            class="absolute right-[36%] w-[120px] h-[12px] bg-[#e26215] rounded-md"
+            aria-hidden="true"
+          ></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Features Section -->
+    <section class="text-center my-[60px] mx-auto max-w-[1150px] px-5">
+      <div class="flex justify-center mb-6">
+        <img
+          src="images/3dogs.png"
+          alt="Dog breed preview"
+          class="max-w-full h-auto rounded-xl"
+        />
+      </div>
+      <h2 class="font-poppins font-extrabold text-[34px] text-[#e26215] mb-7">
+        Instantly Identify Any Dog Breed
+      </h2>
+      <div class="grid grid-cols-2 gap-y-8 gap-x-12 mt-5">
+        <div class="flex items-center gap-5 text-left">
+          <span
+            class="font-bold text-[22px] bg-[#e26215] text-white w-12 h-12 flex items-center justify-center rounded-full"
+            >1</span
+          >
+          <p class="m-0 text-[18px] leading-[1.5]">
+            Our AI scans the image with advanced recognition
+          </p>
+        </div>
+        <div class="flex items-center gap-5 text-left">
+          <span
+            class="font-bold text-[22px] bg-[#e26215] text-white w-12 h-12 flex items-center justify-center rounded-full"
+            >2</span
+          >
+          <p class="m-0 text-[18px] leading-[1.5]">
+            Upload a photo of your dog (or any pup you’re curious about)
+          </p>
+        </div>
+        <div class="flex items-center gap-5 text-left">
+          <span
+            class="font-bold text-[22px] bg-[#e26215] text-white w-12 h-12 flex items-center justify-center rounded-full"
+            >3</span
+          >
+          <p class="m-0 text-[18px] leading-[1.5]">
+            Instantly see the predicted breed with accurate recognition
+          </p>
+        </div>
+        <div class="flex items-center gap-5 text-left">
+          <span
+            class="font-bold text-[22px] bg-[#e26215] text-white w-12 h-12 flex items-center justify-center rounded-full"
+            >4</span
+          >
+          <p class="m-0 text-[18px] leading-[1.5]">
+            Learn more with breed details, quirks, and fun facts
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section
+      class="flex justify-between gap-10 my-[60px] mx-auto max-w-[1150px] px-5 pt-20 flex-wrap"
+    >
+      <!-- Upload Box -->
+      <div
+        class="flex-1 min-w-[260px] border-2 border-dashed border-[#e26215] rounded-xl px-6 py-9 text-center cursor-pointer"
+        onclick="document.getElementById('fileUpload').click()"
+      >
+        <p class="flex flex-col items-center text-[#e26215] m-0">
+          <span
+            class="material-symbols-outlined text-[6rem] pt-12 pb-12 cursor-pointer"
+            >upload</span
+          >
+          <strong class="text-[18px] pb-4"
+            >Drop image or click to select<br />JPG, PNG, BMP, or WEBP</strong
+          >
+        </p>
+        <p class="text-[14px] mt-2 text-[#7a3f1a]">
+          For best results, limit the image to just the dog. Trying different
+          images can help too.
+        </p>
+      </div>
+      <!-- Hidden File Input -->
+      <input
+        type="file"
+        id="fileUpload"
+        accept=".jpg,.jpeg,.png,.bmp,.webp"
+        class="hidden"
+        onchange="previewFile(event)"
+      />
+      <!-- Preview -->
+      <div id="preview"></div>
+      <!-- Results -->
+      <div class="flex-[1.2] min-w-[300px] text-center">
+        <h3 class="font-poppins font-extrabold text-[22px] text-[#e26215] mb-4">
+          RESULTS:
+        </h3>
+        <div
+          class="bg-gradient-to-br from-[#f68c3d] to-[#e26215] rounded-xl px-5 py-10 mb-4"
+        >
+          <img
+            src="images/logo.png"
+            alt="Paw Print logo"
+            class="max-w-[180px] mx-auto filter invert brightness-0"
+          />
+        </div>
+        <p class="text-[14px] leading-[1.5] text-[#555]">
+          Breed predictions are generated through AI image recognition. They may
+          not always reflect your dog’s exact genetic background. For verified
+          results, seek professional testing from a vet or certified provider.
+        </p>
+      </div>
+      <!-- Status -->
+      <div class="flex-[0.8] pt-20 min-w-[220px] text-center">
+        <div
+          class="w-[140px] h-[140px] rounded-full border-[10px] border-[#e26215] flex items-center justify-center text-[28px] font-bold mx-auto mb-4 text-[#7a3f1a]"
+        >
+          <span>0%</span>
+        </div>
+        <p class="font-bold mb-8 text-[#e26215]">NOTHING TO TEST YET</p>
+        <div class="flex justify-center gap-3">
+          <a
+            href="#"
+            class="btn-ghost px-6 py-2 border-4 border-[#e26215] rounded-full font-bold text-[#e26215] text-[14px] transition hover:bg-[#e26215] hover:text-white hover:border-[#cc500f]"
+            >TEST</a
+          >
+          <a
+            href="#"
+            class="btn-ghost px-6 py-2 border-4 border-[#e26215] rounded-full font-bold text-[#e26215] text-[14px] transition hover:bg-[#e26215] hover:text-white hover:border-[#cc500f]"
+            >DOWNLOAD</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section
+      class="flex items-center justify-between px-[10%] py-[60px] bg-white"
+    >
+      <div class="max-w-[55%] text-[#333]">
+        <h1
+          class="text-[3.5rem] font-extrabold font-questrial text-[#f15a24] mb-5"
+        >
+          About
+        </h1>
+        <div class="flex items-center gap-2.5 mb-5">
+          <img src="images/logo.png" alt="Paw Print Logo" class="h-[60px]" />
+          <p class="italic text-[#f15a24] font-semibold">
+            is more than a project. It is a memory and a tribute.
+          </p>
+        </div>
+        <p class="text-[18px] leading-[1.6]">
+          I once had a dog, a stray who became part of my life. I never knew his
+          breed and to me it did not matter. He was my companion and my friend.
+          Later I found out he was half Spitz and half Corgi. I was amazed,
+          because behind that little face was a story I never expected.<br /><br />
+          He is gone now. He passed away from distemper. It was one of the
+          hardest moments of my life. But in his memory I wanted to create
+          something meaningful. Something that could help others who have felt
+          the same curiosity and love.<br /><br />
+          PawPrint is for anyone who has ever wondered about their dog’s story.
+          It is for strays, for mixes, for the unknown, and for the beloved pets
+          who leave us too soon. Every dog has a story and every story deserves
+          to be told.
+        </p>
+      </div>
+      <div class="w-full pt-12">
+        <img
+          src="images/dog2.png"
+          alt="Corgi Dog"
+          class="max-w-[650px] w-full h-auto"
+        />
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="text-center px-[10%] py-[60px] bg-white">
+      <h2 class="text-[2.5rem] font-bold text-[#d94d00] mb-10">OUR TEAM</h2>
+      <div class="flex justify-center gap-[100px] flex-wrap">
+        <div class="text-center max-w-[300px]">
+          <div
+            class="w-[190px] h-[190px] mx-auto rounded-full bg-[#e26215] flex items-center justify-center overflow-hidden mb-4"
+          >
+            <img
+              src="images/member.png"
+              alt="Team Member 1"
+              class="w-[140px] h-[180px] object-cover"
+            />
+          </div>
+          <h3 class="text-[1.1rem] font-bold text-[#e26215] mt-2 mb-1">
+            GENE ELPIE LANDOY
+          </h3>
+          <p class="text-[0.9rem] text-[#555] mb-2">
+            Founder & CEO | Lead Front-End Developer | Machine Learning Engineer
+          </p>
+          <div
+            class="flex justify-center gap-2 text-[1.1rem] text-[#e26215] mt-2"
+          >
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="text-center max-w-[300px]">
+          <div
+            class="w-[190px] h-[190px] mx-auto rounded-full bg-[#e26215] flex items-center justify-center overflow-hidden mb-4"
+          >
+            <img
+              src="images/member2.png"
+              alt="Team Member 2"
+              class="w-[140px] h-[180px] object-cover"
+            />
+          </div>
+          <h3 class="text-[1.1rem] font-bold text-[#e26215] mt-2 mb-1">
+            DOMINIQUE JOSE LOTO
+          </h3>
+          <p class="text-[0.9rem] text-[#555] mb-2">
+            Founder & CEO | Lead Front-End Developer | Machine Learning Engineer
+          </p>
+          <div
+            class="flex justify-center gap-2 text-[1.1rem] text-[#e26215] mt-2"
+          >
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#d94d00] text-white px-[10%] pt-10 pb-5">
+      <div class="flex justify-between flex-wrap gap-10 mb-8">
+        <div>
+          <img
+            src="images/logo.png"
+            alt="Paw Print Logo"
+            class="w-[120px] filter invert brightness-0"
+          />
+        </div>
+        <div class="flex gap-[60px] flex-wrap">
+          <div>
+            <h4 class="font-bold mb-2">Learn More</h4>
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >Pretrained Classifiers</a
+            >
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >Customers</a
+            >
+          </div>
+          <div>
+            <h4 class="font-bold mb-2">Get Started</h4>
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >Contact us</a
+            >
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >Book demo</a
+            >
+          </div>
+          <div>
+            <h4 class="font-bold mb-2">Developers</h4>
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >API Docs</a
+            >
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >API Status</a
+            >
+          </div>
+          <div>
+            <h4 class="font-bold mb-2">About</h4>
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >Blog</a
+            >
+            <a href="#" class="block text-[0.9rem] mb-1 hover:opacity-70"
+              >Support</a
+            >
+          </div>
+        </div>
+      </div>
+      <div
+        class="border-t border-white/30 pt-4 flex justify-between items-center flex-wrap"
+      >
+        <p class="text-[0.85rem]">© 2025 PawPrint | Privacy Policy | Terms</p>
+        <div class="flex gap-3 text-[1.2rem]">
+          <a href="#"><i class="fab fa-youtube"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
