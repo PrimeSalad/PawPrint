@@ -35,6 +35,10 @@
       .features h2 {
         font-family: "Poppins", sans-serif;
       }
+      /* Progress Circle Styling */
+      .progress-circle {
+        background: conic-gradient(#e26215 0%, #ddd 0%);
+      }
     </style>
   </head>
   <body class="bg-white text-[#7a3f1a]">
@@ -170,7 +174,6 @@
         id="fileUpload"
         accept=".jpg,.jpeg,.png,.bmp,.webp"
         class="hidden"
-        onchange="previewFile(event)"
       />
       <!-- Preview -->
       <div id="preview"></div>
@@ -196,15 +199,24 @@
       </div>
       <!-- Status -->
       <div class="flex-[0.8] pt-20 min-w-[220px] text-center">
+        <!-- Progress Circle -->
         <div
-          class="w-[140px] h-[140px] rounded-full border-[10px] border-[#e26215] flex items-center justify-center text-[28px] font-bold mx-auto mb-4 text-[#7a3f1a]"
+          id="progressCircle"
+          class="progress-circle w-[140px] h-[140px] rounded-full flex items-center justify-center mx-auto mb-4 relative"
         >
-          <span>0%</span>
+          <span
+            id="progressText"
+            class="text-[28px] font-bold text-[#7a3f1a] absolute"
+            >0%</span
+          >
         </div>
-        <p class="font-bold mb-8 text-[#e26215]">NOTHING TO TEST YET</p>
+        <p id="progressLabel" class="font-bold mb-8 text-[#e26215]">
+          NOTHING TO TEST YET
+        </p>
         <div class="flex justify-center gap-3">
           <a
             href="#"
+            onclick="startProgress()"
             class="btn-ghost px-6 py-2 border-4 border-[#e26215] rounded-full font-bold text-[#e26215] text-[14px] transition hover:bg-[#e26215] hover:text-white hover:border-[#cc500f]"
             >TEST</a
           >
@@ -377,5 +389,6 @@
         </div>
       </div>
     </footer>
+    <script src="script.js"></script>
   </body>
 </html>
