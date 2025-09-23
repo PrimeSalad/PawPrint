@@ -147,16 +147,16 @@
 
     <!-- Results Section -->
     <section
-      class="flex justify-between gap-10 my-[60px] mx-auto max-w-[1150px] px-5 pt-20 flex-wrap"
+      class="flex flex-col items-center gap-10 my-[60px] mx-auto max-w-[1150px] px-5 pt-20"
     >
       <!-- Upload Box -->
       <div
-        class="flex-1 min-w-[260px] border-2 border-dashed border-[#e26215] rounded-xl px-6 py-9 text-center cursor-pointer"
+        class="w-full max-w-[1200px] h-[300px] border-2 border-dashed border-[#e26215] rounded-xl px-6 py-9 text-center cursor-pointer flex flex-col justify-center"
         onclick="document.getElementById('fileUpload').click()"
       >
         <p class="flex flex-col items-center text-[#e26215] m-0">
           <span
-            class="material-symbols-outlined text-[6rem] pt-12 pb-12 cursor-pointer"
+            class="material-symbols-outlined text-[6rem] pt-6 pb-6 cursor-pointer"
             >upload</span
           >
           <strong class="text-[18px] pb-4"
@@ -168,6 +168,7 @@
           images can help too.
         </p>
       </div>
+
       <!-- Hidden File Input -->
       <input
         type="file"
@@ -175,58 +176,9 @@
         accept=".jpg,.jpeg,.png,.bmp,.webp"
         class="hidden"
       />
+
       <!-- Preview -->
-      <div id="preview"></div>
-      <!-- Results -->
-      <div class="flex-[1.2] min-w-[300px] text-center">
-        <h3 class="font-poppins font-extrabold text-[22px] text-[#e26215] mb-4">
-          RESULTS:
-        </h3>
-        <div
-          class="bg-gradient-to-br from-[#f68c3d] to-[#e26215] rounded-xl px-5 py-10 mb-4"
-        >
-          <img
-            src="images/logo.png"
-            alt="Paw Print logo"
-            class="max-w-[180px] mx-auto filter invert brightness-0"
-          />
-        </div>
-        <p class="text-[14px] leading-[1.5] text-[#555]">
-          Breed predictions are generated through AI image recognition. They may
-          not always reflect your dog’s exact genetic background. For verified
-          results, seek professional testing from a vet or certified provider.
-        </p>
-      </div>
-      <!-- Status -->
-      <div class="flex-[0.8] pt-20 min-w-[220px] text-center">
-        <!-- Progress Circle -->
-        <div
-          id="progressCircle"
-          class="progress-circle w-[140px] h-[140px] rounded-full flex items-center justify-center mx-auto mb-4 relative"
-        >
-          <span
-            id="progressText"
-            class="text-[28px] font-bold text-[#7a3f1a] absolute"
-            >0%</span
-          >
-        </div>
-        <p id="progressLabel" class="font-bold mb-8 text-[#e26215]">
-          NOTHING TO TEST YET
-        </p>
-        <div class="flex justify-center gap-3">
-          <a
-            href="#"
-            onclick="startProgress()"
-            class="btn-ghost px-6 py-2 border-4 border-[#e26215] rounded-full font-bold text-[#e26215] text-[14px] transition hover:bg-[#e26215] hover:text-white hover:border-[#cc500f]"
-            >TEST</a
-          >
-          <a
-            href="#"
-            class="btn-ghost px-6 py-2 border-4 border-[#e26215] rounded-full font-bold text-[#e26215] text-[14px] transition hover:bg-[#e26215] hover:text-white hover:border-[#cc500f]"
-            >DOWNLOAD</a
-          >
-        </div>
-      </div>
+      <div id="preview" class="w-full flex flex-col items-center gap-8"></div>
     </section>
 
     <!-- About Section -->
