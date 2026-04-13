@@ -43,14 +43,22 @@ else:
 # -----------------------------
 app = Flask(__name__, static_folder="static")
 
-# Professional CORS Configuration
-CORS(app, resources={
-    r"/*": {
-        "origins": "*",
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+# Robust CORS Setup
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+@app.after_request
+def add_header(response):
+    # Allow the specific Vercel origin or all for debugging
+    origin = request.headers.get('Origin')
+    if origin:
+        response.headers['Access-Control-Allow-Origin'] = origin
+    else:
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
 
 
 # -----------------------------
