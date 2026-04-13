@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden w-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PawPrint | AI Dog Breed Classifier</title>
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Questrial&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+    <style>
+      body {
+        font-family: "Questrial", system-ui, sans-serif;
+        scroll-behavior: smooth;
+        background-color: white;
+      }
+      h1, h2, h3, h4, .font-poppins {
+        font-family: "Poppins", sans-serif;
+      }
+      .btn-ghost {
+        font-family: "Poppins", sans-serif;
+      }
+      /* Custom utility to hide an element only on small screens */
+      .hide-on-sm {
+        display: none;
+      }
+      @media (min-width: 640px) {
+        .hide-on-sm {
+          display: block;
+        }
+      }
+      /* Smooth fade in for sections */
+      .fade-in-section {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      .fade-in-section.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @keyframes scan {
+        0% { transform: translateY(-100%); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(350px); opacity: 0; }
+      }
+    </style>
+  </head>
+  <body class="bg-[#faf8f6] text-[#7a3f1a] selection:bg-[#e26215]/20 relative overflow-x-hidden w-full">
+    <!-- Global Ambient AI Background -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1] overflow-hidden">
+      <!-- Grid pattern overlay -->
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,#e2621508_1px,transparent_1px),linear-gradient(to_bottom,#e2621508_1px,transparent_1px)] bg-[size:60px_60px] [mask-image:linear-gradient(to_bottom,white,transparent_80%)]"></div>
+      <!-- Glowing orbs -->
+      <div class="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-[#e26215]/5 rounded-full blur-[100px] animate-pulse" style="animation-duration: 8s;"></div>
+      <div class="absolute top-[40%] right-[-10%] w-[30vw] h-[30vw] max-w-[500px] max-h-[500px] bg-[#f15a24]/5 rounded-full blur-[100px] animate-pulse" style="animation-duration: 12s;"></div>
+      <div class="absolute bottom-[-10%] left-[20%] w-[50vw] h-[50vw] max-w-[700px] max-h-[700px] bg-[#e26215]/5 rounded-full blur-[120px] animate-pulse" style="animation-duration: 10s;"></div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <header class="fixed top-5 right-5 md:right-auto md:top-4 md:left-1/2 md:-translate-x-1/2 z-50 md:w-[95%] md:max-w-[900px] md:bg-white/60 md:backdrop-blur-2xl md:border md:border-white/60 md:shadow-[0_10px_40px_-10px_rgba(226,98,21,0.15)] md:rounded-full md:px-8 md:py-3 flex justify-end md:justify-between items-center transition-all duration-500 hover:md:bg-white/80 hover:md:shadow-[0_15px_40px_-10px_rgba(226,98,21,0.2)]">
+      <!-- Logo -->
+      <a href="#" class="hidden md:flex items-center gap-2 shrink-0 group">
+        <img src="images/logo.png" alt="PawPrint" class="h-10 object-contain group-hover:scale-105 transition-transform duration-300" />
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav
+        aria-label="Main navigation"
+        class="hidden md:flex gap-8 lg:gap-12 font-poppins font-bold uppercase text-[#8a4f2a]/80 text-[13px] tracking-[2px]"
+      >
+        <a href="#" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+          HOME
+          <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
+        </a>
+        <a href="#test-section" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+          TEST
+          <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
+        </a>
+        <a href="#about" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+          ABOUT
+          <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
+        </a>
+        <a href="#team" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+          TEAM
+          <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
+        </a>
+      </nav>
+
+      <!-- CTA / Mobile Toggle -->
+      <div class="flex items-center gap-4 w-auto justify-end">
+        <a href="#try-free" class="hidden md:inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white font-poppins font-extrabold text-[12px] tracking-[0.15em] px-6 py-2.5 rounded-full shadow-[0_5px_15px_rgba(226,98,21,0.3)] hover:shadow-[0_8px_20px_rgba(226,98,21,0.4)] hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group/btn">
+          <span class="relative z-10">SCAN NOW</span>
+          <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 z-0"></div>
+        </a>
+        <button id="mobile-menu-btn" class="md:hidden text-[#e26215] text-base p-0 m-0 focus:outline-none hover:opacity-70 transition-opacity flex items-center justify-center" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-[#faf8f6] z-[100] hidden flex-col transition-all duration-500 opacity-0 translate-y-[-100%] overflow-hidden">
+      <!-- Decorative background -->
+      <div class="absolute top-[-10%] right-[-10%] w-[60vw] h-[60vw] max-w-[300px] max-h-[300px] bg-[#e26215]/10 rounded-full blur-[80px]"></div>
+      <div class="absolute bottom-[-10%] left-[-10%] w-[80vw] h-[80vw] max-w-[400px] max-h-[400px] bg-[#f15a24]/10 rounded-full blur-[80px]"></div>
+
+      <div class="w-full flex justify-end p-6 relative z-10">
+        <button id="mobile-menu-close" class="text-[#e26215] text-2xl hover:scale-110 transition-transform p-2 bg-white/50 backdrop-blur-md rounded-full shadow-sm w-10 h-10 flex items-center justify-center">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="flex-1 flex flex-col items-center justify-center pb-20 relative z-10">
+        <img src="images/logo.png" alt="PawPrint" class="h-12 mb-12 drop-shadow-md" />
+        <nav class="flex flex-col items-center gap-8 font-poppins font-black text-[32px] text-[#8a4f2a]">
+          <a href="#" class="mobile-link hover:text-[#e26215] transition-colors relative group">HOME<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="#test-section" class="mobile-link hover:text-[#e26215] transition-colors relative group">TEST<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="#about" class="mobile-link hover:text-[#e26215] transition-colors relative group">ABOUT<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="#team" class="mobile-link hover:text-[#e26215] transition-colors relative group">TEAM<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="#try-free" class="mobile-link mt-8 px-10 py-4 rounded-full bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white text-[18px] tracking-[0.2em] shadow-[0_15px_30px_-5px_rgba(226,98,21,0.4)]">SCAN NOW</a>
+        </nav>
+      </div>
+    </div>
+
+    <main class="relative z-10">
+      <!-- HERO SECTION -->
+      <div
+        class="w-full max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-[80px] px-5 pt-24 sm:pt-28 lg:pt-40 pb-12 sm:pb-16 lg:pb-32 relative lg:min-h-[90vh]"
+      >
+        <div
+          class="w-full lg:flex-1 flex flex-col items-center lg:items-start gap-6 lg:gap-8 text-center lg:text-left relative z-10 lg:pl-5"
+        >
+          <img
+            src="images/logo.png"
+            alt="Paw Print logo"
+            class="w-56 sm:w-64 md:w-[360px] max-w-full block"
+          />
+          <p
+            class="max-w-[460px] text-[16px] sm:text-[18px] md:text-[22px] leading-[1.6] text-[#8a4f2a] m-0 px-2 lg:px-0 opacity-90 font-medium"
+          >
+            Upload a photo and let our <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#e26215] to-[#f15a24] font-bold">advanced AI</span> instantly identify
+            your dog's breed and unique personality.
+          </p>
+          <div class="mt-4 flex justify-center items-center gap-4 w-full lg:justify-start">
+            <a
+              class="btn-ghost font-poppins font-extrabold text-[16px] sm:text-[18px] md:text-[20px] px-8 py-4 md:px-10 md:py-5 rounded-full bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white no-underline inline-block transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(226,98,21,0.5)] shadow-lg shadow-[#e26215]/30 relative overflow-hidden group"
+              href="#try-free"
+            >
+              <span class="relative z-10">TRY FOR FREE</span>
+              <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 z-0"></div>
+            </a>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center relative z-10 w-full lg:flex-1 mt-2 sm:mt-6 lg:mt-0"
+        >
+          <!-- Subtle AI scanner frame behind the dog -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-[#e26215]/5 to-transparent rounded-full blur-3xl transform scale-150"></div>
+          <img
+            src="images/dog.png"
+            alt="Happy Dog"
+            class="w-[200px] sm:w-[260px] md:w-[350px] lg:w-[600px] max-w-[100%] h-auto block relative z-10 drop-shadow-[0_20px_50px_rgba(226,98,21,0.2)] hover:scale-105 transition-transform duration-700"
+          />
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS SECTION -->
+      <section
+        id="test-section"
+        class="text-center py-16 lg:py-24 mx-auto max-w-[1200px] px-5 relative"
+      >
+        <div class="flex justify-center mb-12 lg:mb-16 relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-[#e26215]/20 to-[#f15a24]/20 blur-3xl rounded-[3rem] transform scale-90"></div>
+          <img
+            src="images/3dogs.png"
+            alt="Dog breed examples"
+            class="max-w-full h-auto rounded-[2rem] lg:rounded-[2.5rem] shadow-[0_20px_40px_-10px_rgba(226,98,21,0.3)] border-4 border-white/50 backdrop-blur-sm relative z-10"
+          />
+        </div>
+        <h2
+          class="font-poppins font-black text-[24px] sm:text-[28px] md:text-[36px] lg:text-[44px] mb-8 lg:mb-16 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-[#e26215] to-[#8a4f2a] inline-block"
+        >
+          HOW THE AI WORKS
+        </h2>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12"
+        >
+          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 text-center sm:text-left p-6 lg:p-8 rounded-3xl bg-white/80 backdrop-blur-md border border-[#e26215]/10 shadow-[0_10px_30px_-10px_rgba(226,98,21,0.1)] hover:shadow-[0_20px_40px_-10px_rgba(226,98,21,0.2)] hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-[#e26215]/5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 group-hover:bg-[#e26215]/10 transition-colors duration-500"></div>
+            <span
+              class="font-black text-[18px] sm:text-[24px] bg-gradient-to-br from-[#e26215] to-[#f15a24] text-white w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl flex-shrink-0 shadow-[0_5px_15px_rgba(226,98,21,0.4)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative z-10"
+              >01</span
+            >
+            <div class="relative z-10">
+                <h4 class="font-bold text-base sm:text-lg lg:text-xl mb-1 sm:mb-2 lg:mb-3 text-[#e26215] font-poppins tracking-wide">Input Data</h4>
+                <p class="m-0 text-[14px] sm:text-[15px] lg:text-[16px] leading-[1.6] text-[#8a4f2a]/90 font-medium">
+                  Provide a photo of a dog. Ensure clear lighting for optimal feature extraction.
+                </p>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6 text-center sm:text-left p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/80 backdrop-blur-md border border-[#e26215]/10 shadow-[0_10px_30px_-10px_rgba(226,98,21,0.1)] hover:shadow-[0_20px_40px_-10px_rgba(226,98,21,0.2)] hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-[#e26215]/5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 group-hover:bg-[#e26215]/10 transition-colors duration-500"></div>
+            <span
+              class="font-black text-[18px] sm:text-[24px] bg-gradient-to-br from-[#e26215] to-[#f15a24] text-white w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl flex-shrink-0 shadow-[0_5px_15px_rgba(226,98,21,0.4)] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 relative z-10"
+              >02</span
+            >
+            <div class="relative z-10">
+                <h4 class="font-bold text-base sm:text-lg lg:text-xl mb-1 sm:mb-2 lg:mb-3 text-[#e26215] font-poppins tracking-wide">Feature Scanning</h4>
+                <p class="m-0 text-[14px] sm:text-[15px] lg:text-[16px] leading-[1.6] text-[#8a4f2a]/90 font-medium">
+                  Our advanced neural network analyzes structural patterns, coat textures, and key markers.
+                </p>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6 text-center sm:text-left p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/80 backdrop-blur-md border border-[#e26215]/10 shadow-[0_10px_30px_-10px_rgba(226,98,21,0.1)] hover:shadow-[0_20px_40px_-10px_rgba(226,98,21,0.2)] hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-[#e26215]/5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 group-hover:bg-[#e26215]/10 transition-colors duration-500"></div>
+            <span
+              class="font-black text-[18px] sm:text-[24px] bg-gradient-to-br from-[#e26215] to-[#f15a24] text-white w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl flex-shrink-0 shadow-[0_5px_15px_rgba(226,98,21,0.4)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative z-10"
+              >03</span
+            >
+            <div class="relative z-10">
+                <h4 class="font-bold text-base sm:text-lg lg:text-xl mb-1 sm:mb-2 lg:mb-3 text-[#e26215] font-poppins tracking-wide">Algorithmic Match</h4>
+                <p class="m-0 text-[14px] sm:text-[15px] lg:text-[16px] leading-[1.6] text-[#8a4f2a]/90 font-medium">
+                  The model cross-references thousands of parameters against our comprehensive breed database.
+                </p>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6 text-center sm:text-left p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/80 backdrop-blur-md border border-[#e26215]/10 shadow-[0_10px_30px_-10px_rgba(226,98,21,0.1)] hover:shadow-[0_20px_40px_-10px_rgba(226,98,21,0.2)] hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-[#e26215]/5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 group-hover:bg-[#e26215]/10 transition-colors duration-500"></div>
+            <span
+              class="font-black text-[18px] sm:text-[24px] bg-gradient-to-br from-[#e26215] to-[#f15a24] text-white w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl flex-shrink-0 shadow-[0_5px_15px_rgba(226,98,21,0.4)] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 relative z-10"
+              >04</span
+            >
+            <div class="relative z-10">
+                <h4 class="font-bold text-base sm:text-lg lg:text-xl mb-1 sm:mb-2 lg:mb-3 text-[#e26215] font-poppins tracking-wide">Gemini Insights</h4>
+                <p class="m-0 text-[14px] sm:text-[15px] lg:text-[16px] leading-[1.6] text-[#8a4f2a]/90 font-medium">
+                  Receive a detailed breakdown, including care advice and behavioral traits, powered by Gemini.
+                </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UPLOAD SECTION -->
+      <section
+        id="try-free"
+        class="flex flex-col items-center gap-6 lg:gap-10 my-16 lg:my-24 mx-auto max-w-[1000px] px-5 py-16 lg:py-24 bg-white/70 backdrop-blur-xl rounded-[2rem] lg:rounded-[3rem] border border-[#e26215]/20 shadow-[0_20px_50px_-10px_rgba(226,98,21,0.1)] relative overflow-hidden"
+      >
+        <h2 class="text-[1.75rem] sm:text-[2.25rem] md:text-[3rem] font-black tracking-tight text-[#e26215] relative z-10 font-poppins text-center">
+          INITIALIZE SCAN
+        </h2>
+
+        <div
+          class="w-full max-w-[800px] bg-white min-h-[200px] sm:min-h-[250px] md:min-h-[300px] lg:min-h-[350px] border-2 border-dashed border-[#e26215]/50 rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] px-4 sm:px-6 md:px-8 py-6 sm:py-10 md:py-12 text-center cursor-pointer flex flex-col justify-center items-center shadow-[0_0_40px_rgba(226,98,21,0.05)] hover:shadow-[0_0_60px_rgba(226,98,21,0.15)] hover:border-[#e26215] transition-all duration-500 group relative z-10 overflow-hidden"
+          onclick="document.getElementById('fileUpload').click()"
+        >
+          <!-- Animated scanning line -->
+          <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#e26215] to-transparent transform -translate-y-full group-hover:animate-[scan_2s_ease-in-out_infinite]"></div>
+
+          <div class="w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-[#e26215]/10 to-[#f15a24]/10 rounded-full flex items-center justify-center mb-4 sm:mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-500 ring-1 ring-[#e26215]/20 group-hover:ring-[#e26215]/50">
+              <span class="material-symbols-outlined text-[2rem] sm:text-[3rem] md:text-[4rem] text-transparent bg-clip-text bg-gradient-to-br from-[#e26215] to-[#8a4f2a]">document_scanner</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <strong class="text-[14px] sm:text-[18px] md:text-[22px] lg:text-[26px] mb-2 sm:mb-3 font-poppins text-[#e26215] group-hover:text-[#d94d00] transition-colors">Drop image or click to select</strong>
+            <span class="text-[#8a4f2a]/50 font-bold uppercase tracking-[0.2em] text-[9px] sm:text-[10px] md:text-xs px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#e26215]/5">JPG, PNG, BMP, or WEBP</span>
+          </div>
+        </div>
+
+        <input
+          type="file"
+          id="fileUpload"
+          accept=".jpg,.jpeg,.png,.bmp,.webp"
+          class="hidden"
+        />
+
+        <div id="preview" class="w-full flex flex-col items-center relative z-10"></div>
+      </section>
+
+      <!-- ABOUT SECTION -->
+      <section
+        id="about"
+        class="flex flex-col lg:flex-row items-center justify-between px-5 lg:px-[12%] py-16 lg:py-32 relative"
+      >
+        <div
+          class="w-full lg:max-w-[55%] text-[#333] order-2 lg:order-1 mt-12 lg:mt-0"
+        >
+        <h2 class="text-[1.75rem] sm:text-[2.5rem] md:text-[3.5rem] font-black text-[#f15a24] mb-4 sm:mb-6 lg:mb-8 text-center lg:text-left tracking-tight uppercase">Our Story</h2>
+          <div
+            class="flex items-center gap-4 mb-6 lg:mb-8 justify-center lg:justify-start"
+          >
+            <img
+              src="images/logo.png"
+              alt="Paw Print Logo"
+              class="h-[40px] md:h-[60px]"
+            />
+            <p
+              class="italic text-[#f15a24] font-bold text-[14px] sm:text-[16px] md:text-[18px] border-l-4 border-[#f15a24] pl-4 py-1"
+            >
+              is more than a project. It is a memory and a tribute.
+            </p>
+          </div>
+          <p class="text-[16px] md:text-[18px] lg:text-[20px] leading-[1.8] text-[#8a4f2a]/90 font-medium text-center lg:text-left">
+            I once had a dog, a stray who became part of my life. I never knew his breed and to me it did not matter. He was my companion and my friend. Later I found out he was half Spitz and half Corgi. I was amazed, because behind that little face was a story I never expected.<br /><br />
+            He is gone now. He passed away from distemper. It was one of the hardest moments of my life. But in his memory I wanted to create something meaningful. Something that could help others who have felt the same curiosity and love.<br /><br />
+            PawPrint is for anyone who has ever wondered about their dog’s story. It is for strays, for mixes, for the unknown, and for the beloved pets who leave us too soon. Every dog has a story and every story deserves to be told.
+          </p>
+        </div>
+        <div class="w-full lg:w-[40%] order-1 lg:order-2 flex justify-center relative">
+          <div class="absolute inset-0 bg-gradient-to-tr from-[#e26215]/20 to-transparent rounded-full blur-3xl transform scale-110 z-0 pointer-events-none"></div>
+          <img
+            src="images/dog2.png"
+            alt="About PawPrint"
+            class="max-w-[80%] sm:max-w-[85%] md:max-w-[90%] lg:max-w-[550px] w-full h-auto drop-shadow-[0_20px_40px_rgba(226,98,21,0.2)] rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-3xl relative z-10"
+          />
+        </div>
+      </section>
+
+      <!-- OUR TEAM SECTION -->
+      <section
+        id="team"
+        class="text-center px-5 lg:px-[10%] py-16 lg:py-32 relative overflow-hidden"
+      >
+        <h2 class="text-[1.5rem] sm:text-[2rem] md:text-[3rem] lg:text-[3.5rem] font-black mb-8 sm:mb-12 lg:mb-20 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-[#e26215] to-[#8a4f2a] inline-block relative z-10 font-poppins">
+          THE MINDS BEHIND THE AI
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 max-w-[900px] mx-auto relative z-10">
+          <!-- Gene -->
+          <div class="group bg-white/80 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_10px_40px_-10px_rgba(226,98,21,0.15)] border border-[#e26215]/10 w-full transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_20px_40px_-10px_rgba(226,98,21,0.25)] relative overflow-hidden flex flex-col h-full mx-auto max-w-[380px]">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#e26215] to-[#f15a24] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            
+            <div class="w-[140px] h-[140px] sm:w-[160px] sm:h-[160px] mx-auto mb-6 sm:mb-8 rounded-full bg-gradient-to-br from-[#e26215] to-[#8a4f2a] p-[3px] shadow-[0_0_20px_rgba(226,98,21,0.3)] group-hover:shadow-[0_0_30px_rgba(226,98,21,0.5)] transition-shadow duration-500">
+              <div class="w-full h-full rounded-full bg-white overflow-hidden flex items-center justify-center relative">
+                 <img src="images/member.png" alt="Gene Elpie Landoy" class="w-[110px] sm:w-[130px] h-[140px] sm:h-[160px] object-cover mt-3 sm:mt-4 transform group-hover:scale-110 transition-transform duration-500 relative z-10" />
+                 <div class="absolute inset-0 bg-gradient-to-t from-[#e26215]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none"></div>
+              </div>
+            </div>
+            
+            <h3 class="text-[1.25rem] sm:text-[1.5rem] font-black text-[#e26215] mb-2 font-poppins">GENE ELPIE LANDOY</h3>
+            <div class="flex justify-center mb-4 sm:mb-6">
+              <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#e26215]/10 text-[#e26215]">
+                <span class="material-symbols-outlined text-[0.9rem] sm:text-[1.1rem]">memory</span>
+                <p class="text-[0.7rem] sm:text-[0.8rem] font-bold uppercase tracking-widest m-0">Developer | AI Engineer</p>
+              </div>
+            </div>
+            <p class="text-[0.9rem] sm:text-[1rem] text-[#8a4f2a]/80 mb-6 sm:mb-8 leading-relaxed px-2 font-medium flex-grow">
+              Spearheading the integration of advanced machine learning architectures to decode canine genetics. Driven by a passion to bridge the gap between complex neural networks and accessible, everyday pet care.
+            </p>
+            <div class="flex justify-center gap-6 text-2xl border-t border-[#e26215]/10 pt-6 w-full mt-auto">
+              <a href="https://www.instagram.com/elpxzn/" target="_blank" class="text-[#8a4f2a]/40 hover:text-[#e26215] hover:scale-110 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-instagram"></i></a>
+              <a href="https://www.facebook.com/pickl.piee" target="_blank" class="text-[#8a4f2a]/40 hover:text-[#e26215] hover:scale-110 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-facebook"></i></a>
+              <a href="https://www.linkedin.com/in/gene-elpie-landoy-b1851b28b/" target="_blank" class="text-[#8a4f2a]/40 hover:text-[#e26215] hover:scale-110 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+
+          <!-- Dominique -->
+          <div class="group bg-white/80 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_10px_40px_-10px_rgba(226,98,21,0.15)] border border-[#e26215]/10 w-full transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_20px_40px_-10px_rgba(226,98,21,0.25)] relative overflow-hidden flex flex-col h-full mx-auto max-w-[380px]">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#e26215] to-[#f15a24] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            
+            <div class="w-[140px] h-[140px] sm:w-[160px] sm:h-[160px] mx-auto mb-6 sm:mb-8 rounded-full bg-gradient-to-br from-[#e26215] to-[#8a4f2a] p-[3px] shadow-[0_0_20px_rgba(226,98,21,0.3)] group-hover:shadow-[0_0_30px_rgba(226,98,21,0.5)] transition-shadow duration-500">
+              <div class="w-full h-full rounded-full bg-white overflow-hidden flex items-center justify-center relative">
+                 <img src="images/member2.png" alt="Dominique Jose Loto" class="w-[110px] sm:w-[130px] h-[140px] sm:h-[160px] object-cover mt-3 sm:mt-4 transform group-hover:scale-110 transition-transform duration-500 relative z-10" />
+                 <div class="absolute inset-0 bg-gradient-to-t from-[#e26215]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none"></div>
+              </div>
+            </div>
+            
+            <h3 class="text-[1.25rem] sm:text-[1.5rem] font-black text-[#e26215] mb-2 font-poppins">DOMINIQUE JOSE LOTO</h3>
+            <div class="flex justify-center mb-4 sm:mb-6">
+              <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#e26215]/10 text-[#e26215]">
+                <span class="material-symbols-outlined text-[0.9rem] sm:text-[1.1rem]">design_services</span>
+                <p class="text-[0.7rem] sm:text-[0.8rem] font-bold uppercase tracking-widest m-0">Researcher</p>
+              </div>
+            </div>
+            <p class="text-[0.9rem] sm:text-[1rem] text-[#8a4f2a]/80 mb-6 sm:mb-8 leading-relaxed px-2 font-medium flex-grow">
+              Crafting intuitive, human-centric interfaces that seamlessly connect users with powerful AI insights. Dedicated to transforming raw data into meaningful, visually compelling experiences for pet owners.
+            </p>
+            <div class="flex justify-center gap-6 text-2xl border-t border-[#e26215]/10 pt-6 w-full mt-auto">
+              <a href="https://www.instagram.com/elpzn/" target="_blank" class="text-[#8a4f2a]/40 hover:text-[#e26215] hover:scale-110 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-instagram"></i></a>
+              <a href="https://www.facebook.com/Crimson718" target="_blank" class="text-[#8a4f2a]/40 hover:text-[#e26215] hover:scale-110 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-facebook"></i></a>
+              <a href="https://www.linkedin.com/login" target="_blank" class="text-[#8a4f2a]/40 hover:text-[#e26215] hover:scale-110 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-gradient-to-b from-[#1a0f08] to-[#0a0603] text-white py-16 border-t border-[#e26215]/20 relative overflow-hidden">
+      <!-- Footer Ambient Glow -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#e26215]/50 to-transparent"></div>
+      <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-[#e26215]/10 rounded-[100%] blur-[80px] pointer-events-none"></div>
+
+      <div class="container mx-auto px-5 lg:px-20 relative z-10">
+        <!-- Main Footer Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-8 mb-16">
+          <!-- Logo & Description -->
+          <div class="col-span-1 md:col-span-2 lg:col-span-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <a href="#" class="inline-block group">
+              <img src="images/logo.png" alt="PawPrint" class="h-20 md:h-24 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" />
+            </a>
+            <p class="text-[0.9rem] text-[#a08a7b] mt-6 leading-relaxed max-w-[300px]">
+              Advanced AI neural network for canine breed classification. Identifying stories, one pawprint at a time.
+            </p>
+          </div>
+
+          <!-- Navigation Links -->
+          <div class="flex flex-col items-center lg:items-start">
+            <h4 class="text-[0.85rem] font-poppins font-black text-[#e26215] mb-6 uppercase tracking-[0.15em] flex items-center gap-2">
+              <span class="material-symbols-outlined text-[1rem]">navigation</span> Navigation
+            </h4>
+            <ul class="space-y-4 text-[0.95rem] text-[#d4c5b9] font-medium">
+              <li><a href="#" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Home</a></li>
+              <li><a href="#test-section" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">How it Works</a></li>
+              <li><a href="#try-free" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Initialize Scan</a></li>
+              <li><a href="#about" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Our Story</a></li>
+              <li><a href="#team" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">The Team</a></li>
+            </ul>
+          </div>
+
+          <!-- Resources Links -->
+          <div class="flex flex-col items-center lg:items-start">
+            <h4 class="text-[0.85rem] font-poppins font-black text-[#e26215] mb-6 uppercase tracking-[0.15em] flex items-center gap-2">
+              <span class="material-symbols-outlined text-[1rem]">public</span> Resources
+            </h4>
+            <ul class="space-y-4 text-[0.95rem] text-[#d4c5b9] font-medium">
+              <li><a href="https://www.akc.org/" target="_blank" rel="noopener noreferrer" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-1.5">AKC Encyclopedia <span class="material-symbols-outlined text-[14px] opacity-50">open_in_new</span></a></li>
+              <li><a href="https://www.petfinder.com/" target="_blank" rel="noopener noreferrer" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-1.5">Dog Adoption <span class="material-symbols-outlined text-[14px] opacity-50">open_in_new</span></a></li>
+              <li><a href="https://www.aspca.org/" target="_blank" rel="noopener noreferrer" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-1.5">Pet Care Guides <span class="material-symbols-outlined text-[14px] opacity-50">open_in_new</span></a></li>
+            </ul>
+          </div>
+
+          <!-- Connect -->
+          <div class="flex flex-col items-center lg:items-start">
+            <h4 class="text-[0.85rem] font-poppins font-black text-[#e26215] mb-6 uppercase tracking-[0.15em] flex items-center gap-2">
+              <span class="material-symbols-outlined text-[1rem]">hub</span> Connect
+            </h4>
+            <p class="text-[0.9rem] text-[#a08a7b] mb-6 text-center lg:text-left">
+              Follow our journey or reach out for collaborations.
+            </p>
+            <div class="flex gap-4">
+              <a href="mailto:contact@pawprint.ai" class="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center hover:bg-[#e26215] hover:border-[#e26215] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(226,98,21,0.3)] transition-all duration-300 text-sm">
+                <i class="fas fa-envelope"></i>
+              </a>
+              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center hover:bg-[#e26215] hover:border-[#e26215] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(226,98,21,0.3)] transition-all duration-300 text-sm">
+                <i class="fab fa-github"></i>
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center hover:bg-[#e26215] hover:border-[#e26215] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(226,98,21,0.3)] transition-all duration-300 text-sm">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-white/10 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+          <p class="text-center sm:text-left text-[0.75rem] sm:text-[0.8rem] text-[#8a7563] font-medium">
+            &copy; 2026 PawPrint AI. All rights reserved.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-6 text-[0.75rem] sm:text-[0.8rem] text-[#8a7563] font-medium text-center sm:text-left">
+            <button onclick="document.getElementById('privacy-modal').classList.remove('hidden')" class="hover:text-[#e26215] transition-colors duration-300 cursor-pointer">Privacy Policy</button>
+            <button onclick="document.getElementById('terms-modal').classList.remove('hidden')" class="hover:text-[#e26215] transition-colors duration-300 cursor-pointer">Terms of Service</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('privacy-modal').classList.add('hidden')"></div>
+      <div class="bg-white/90 backdrop-blur-xl rounded-[2rem] p-8 md:p-10 max-w-[700px] w-full max-h-[85vh] overflow-y-auto relative z-10 shadow-[0_20px_50px_-10px_rgba(226,98,21,0.2)] border border-[#e26215]/10">
+        <button onclick="document.getElementById('privacy-modal').classList.add('hidden')" class="absolute top-6 right-6 text-[#8a4f2a]/50 hover:text-[#e26215] transition-colors">
+          <span class="material-symbols-outlined text-[2rem]">close</span>
+        </button>
+        <h2 class="text-[1.5rem] sm:text-[2rem] font-black text-[#e26215] mb-2 font-poppins tracking-tight">Privacy Policy</h2>
+        <p class="text-[#8a4f2a]/60 font-bold uppercase tracking-widest text-xs mb-8 pb-6 border-b border-[#e26215]/10">Last Updated: April 2026</p>
+        
+        <div class="space-y-6 text-[0.95rem] leading-relaxed text-[#8a4f2a]/90 font-medium">
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">1. Data Collection</h3>
+            <p>At PawPrint AI, we prioritize your privacy. The primary data we collect includes the images you upload for canine breed classification. These images are processed by our neural network purely for analysis.</p>
+          </section>
+
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">2. Use of Images</h3>
+            <p>Uploaded images are held temporarily in our active memory cache to perform the AI classification. Once the results are generated and returned to your browser, the images are purged from our live processing servers. We do not build permanent datasets from user uploads without explicit, opt-in consent.</p>
+          </section>
+
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">3. Analytics and Tracking</h3>
+            <p>We collect basic, anonymized telemetry data (such as browser type, general location, and interaction events) to help us improve the PawPrint UI and machine learning models. This data cannot be traced back to individual users.</p>
+          </section>
+
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">4. Third-Party Services</h3>
+            <p>To provide advanced insights, we utilize the Gemini AI framework. Data passed to Gemini is strictly related to the breed classification parameters and does not contain personal identifiable information (PII).</p>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div id="terms-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('terms-modal').classList.add('hidden')"></div>
+      <div class="bg-white/90 backdrop-blur-xl rounded-[2rem] p-8 md:p-10 max-w-[700px] w-full max-h-[85vh] overflow-y-auto relative z-10 shadow-[0_20px_50px_-10px_rgba(226,98,21,0.2)] border border-[#e26215]/10">
+        <button onclick="document.getElementById('terms-modal').classList.add('hidden')" class="absolute top-6 right-6 text-[#8a4f2a]/50 hover:text-[#e26215] transition-colors">
+          <span class="material-symbols-outlined text-[2rem]">close</span>
+        </button>
+        <h2 class="text-[1.5rem] sm:text-[2rem] font-black text-[#e26215] mb-2 font-poppins tracking-tight">Terms of Service</h2>
+        <p class="text-[#8a4f2a]/60 font-bold uppercase tracking-widest text-xs mb-8 pb-6 border-b border-[#e26215]/10">Last Updated: April 2026</p>
+        
+        <div class="space-y-6 text-[0.95rem] leading-relaxed text-[#8a4f2a]/90 font-medium">
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">1. Acceptance of Terms</h3>
+            <p>By accessing or using the PawPrint AI website and classifier tool, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access our service.</p>
+          </section>
+
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">2. Description of Service</h3>
+            <p>PawPrint AI provides a machine learning-based image analysis tool designed to estimate canine breeds and provide general pet care insights. The results generated are estimates based on pattern recognition and should not replace professional veterinary advice or certified DNA testing.</p>
+          </section>
+
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">3. User Conduct</h3>
+            <p>You agree not to use the service for any unlawful purpose or in any way that interrupts, damages, or impairs the functionality of the service. Uploading inappropriate, malicious, or non-canine images to purposefully stress the neural network is prohibited.</p>
+          </section>
+
+          <section>
+            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">4. Intellectual Property</h3>
+            <p>The PawPrint AI logo, UI design, text, and proprietary algorithms are owned by the PawPrint development team. You may not reproduce or duplicate our system without explicit permission. User-uploaded images remain the property of the respective users.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+    
+    <script type="module" src="script.js"></script>
+    <script>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.add('fade-in-section');
+        observer.observe(section);
+      });
+
+      // Mobile Menu Logic
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenuClose = document.getElementById('mobile-menu-close');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileLinks = document.querySelectorAll('.mobile-link');
+
+      function openMenu() {
+        mobileMenu.classList.remove('hidden');
+        // Small delay to allow display block to apply before transition
+        setTimeout(() => {
+          mobileMenu.classList.remove('opacity-0', 'translate-y-[-100%]');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMenu() {
+        mobileMenu.classList.add('opacity-0', 'translate-y-[-100%]');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+        }, 500); // match transition duration
+        document.body.style.overflow = '';
+      }
+
+      mobileMenuBtn.addEventListener('click', openMenu);
+      mobileMenuClose.addEventListener('click', closeMenu);
+      
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', closeMenu);
+      });
+    </script>
+  </body>
+</html>

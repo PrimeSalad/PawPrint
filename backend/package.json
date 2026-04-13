@@ -1,0 +1,12 @@
+{
+  "name": "pawprint-backend",
+  "version": "1.0.0",
+  "description": "Flask backend for PawPrint",
+  "main": "serve.py",
+  "scripts": {
+    "dev": "python serve.py"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

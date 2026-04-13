@@ -1,0 +1,9 @@
+Flask
+flask-cors
+tensorflow
+keras
+Pillow
+numpy
+reportlab
+google-generativeai
+python-dotenv
