@@ -5,7 +5,7 @@ import textwrap
 from datetime import datetime
 
 from flask import Flask, request, jsonify, url_for
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from dotenv import load_dotenv
 from PIL import Image
 import numpy as np
@@ -24,6 +24,12 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 FRONTEND_URL = os.getenv("FRONTEND_URL", "https://pawprint-ai-beta.vercel.app")
 PORT = int(os.getenv("PORT", 5000))
+
+ALLOWED_ORIGINS = [
+    FRONTEND_URL,
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 # Configure Gemini if available
 model_gemini = None
@@ -44,18 +50,12 @@ else:
 # -----------------------------
 app = Flask(__name__, static_folder="static")
 
-# Allow your frontend and local dev
 CORS(
     app,
-    resources={
-        r"/*": {
-            "origins": [
-                FRONTEND_URL,
-                "http://localhost:5173",
-                "http://127.0.0.1:5173",
-            ]
-        }
-    },
+    resources={r"/*": {"origins": ALLOWED_ORIGINS}},
+    methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    supports_credentials=False,
 )
 
 
@@ -166,13 +166,16 @@ def health():
             "model_loaded": infer is not None,
             "labels_loaded": bool(idx_to_class),
             "gemini_configured": model_gemini is not None,
+            "allowed_origins": ALLOWED_ORIGINS,
         }
     )
 
 
-@app.route("/predict", methods=["POST"])
-@cross_origin(origins=[FRONTEND_URL, "http://localhost:5173", "http://127.0.0.1:5173"])
+@app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         if infer is None:
             return jsonify({"error": "Model not available on server"}), 500
@@ -217,9 +220,11 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/generate_pdf", methods=["POST"])
-@cross_origin(origins=[FRONTEND_URL, "http://localhost:5173", "http://127.0.0.1:5173"])
+@app.route("/generate_pdf", methods=["POST", "OPTIONS"])
 def generate_pdf():
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         data = request.get_json(silent=True) or {}
         breed = data.get("breed", "Unknown Dog")
@@ -264,15 +269,12 @@ def generate_pdf():
         c = canvas.Canvas(pdf_path, pagesize=letter)
         width, height = letter
 
-        # Background
         c.setFillColor(colors.HexColor("#faf8f6"))
         c.rect(0, 0, width, height, stroke=0, fill=1)
 
-        # Top accent line
         c.setFillColor(colors.HexColor("#e26215"))
         c.rect(0, height - 15, width, 15, stroke=0, fill=1)
 
-        # Add logo
         logo_path = os.path.join(BASE_DIR, "..", "frontend", "images", "logo.png")
         if os.path.exists(logo_path):
             try:
@@ -287,26 +289,21 @@ def generate_pdf():
             except Exception as img_err:
                 print(f"Logo draw error: {img_err}")
 
-        # Header text
         c.setFont("Helvetica-Bold", 14)
         c.setFillColor(colors.HexColor("#8a4f2a"))
         c.drawString(width - 240, height - 50, "AI BREED CLASSIFICATION")
 
-        # Date
         c.setFont("Helvetica", 10)
         c.setFillColor(colors.HexColor("#a08a7b"))
         c.drawString(width - 240, height - 65, f"Generated: {datetime.now().strftime('%B %d, %Y')}")
 
-        # Title background box
         c.setFillColor(colors.HexColor("#e26215"))
         c.roundRect(40, height - 160, width - 80, 50, 10, stroke=0, fill=1)
 
-        # Title
         c.setFont("Helvetica-Bold", 20)
         c.setFillColor(colors.white)
         c.drawString(60, height - 143, f"BREED REPORT: {breed.upper()}")
 
-        # Content
         c.setFont("Helvetica", 12)
         c.setFillColor(colors.HexColor("#7a3f1a"))
         text_object = c.beginText(50, height - 200)
@@ -351,7 +348,6 @@ def generate_pdf():
 
         c.drawText(text_object)
 
-        # Footer
         c.setFillColor(colors.HexColor("#1a0f08"))
         c.rect(0, 0, width, 60, stroke=0, fill=1)
 
