@@ -10,7 +10,6 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from PIL import Image
 import google.generativeai as genai
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 # -----------------------------
 # LOAD ENVIRONMENT VARIABLES
@@ -20,26 +19,23 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 PORT = int(os.getenv("PORT", 5000))
 
-# Configure Gemini for Free Tier
+# Configure Gemini
 model_gemini = None
 if GEMINI_API_KEY and GEMINI_API_KEY != "your_api_key_here":
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        # Use BLOCK_ONLY_HIGH for Free Tier compatibility
         model_gemini = genai.GenerativeModel(
             model_name="gemini-1.5-flash",
-            safety_settings={
-                HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-                HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-                HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-                HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            generation_config={
+                "temperature": 0.4,
+                "response_mime_type": "application/json",
             }
         )
-        print("Gemini Vision configured for Free Tier.")
+        print("Gemini Vision (with Lens Fallback) configured.")
     except Exception as e:
-        print(f"Gemini configuration failed: {e}")
+        print(f"Gemini failed: {e}")
 else:
-    print("CRITICAL: GEMINI_API_KEY is not set!")
+    print("GEMINI_API_KEY missing.")
 
 
 # -----------------------------
@@ -60,36 +56,23 @@ CORS(app)
 # -----------------------------
 # HELPERS
 # -----------------------------
-def get_gemini_classification(image_data):
+def get_gemini_classification(image_path):
     if not model_gemini:
-        return {"error": "Gemini API Key missing on server."}
+        return None
 
-    # Simplified prompt to avoid triggering safety filters
     prompt = """
-    Instruction: Classify the dog breed in the photo. 
-    Output must be a single JSON object with: 
-    "breed", "confidence" (0.0-1.0), and "description" (object with "short_desc", "traits" list, "fun_fact").
+    Identify the dog breed. Return ONLY JSON:
+    {"breed": "Name", "confidence": 0.9, "description": {"short_desc": "...", "traits": [], "fun_fact": "..."}}
     """
 
     try:
-        img = Image.open(image_data).convert("RGB")
-        # Resize image to save bandwidth/tokens on Free Tier
-        img.thumbnail((800, 800)) 
-        
+        img = Image.open(image_path).convert("RGB")
+        img.thumbnail((800, 800))
         response = model_gemini.generate_content([prompt, img])
-        
         if not response or not response.text:
-            print("Gemini Error: Safety filters might have blocked this.")
             return None
-
-        content = response.text.strip()
-        # Clean JSON
-        if "{" in content:
-            content = content[content.find("{"):content.rfind("}")+1]
-        
-        return json.loads(content)
-    except Exception as e:
-        print(f"Gemini AI Error: {e}")
+        return json.loads(response.text)
+    except Exception:
         return None
 
 
@@ -98,7 +81,7 @@ def get_gemini_classification(image_data):
 # -----------------------------
 @app.route("/")
 def index():
-    return jsonify({"status": "online", "mode": "Free Tier Optimized"})
+    return jsonify({"status": "online", "fallback": "Google Lens Enabled"})
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -107,48 +90,41 @@ def predict():
             return jsonify({"error": "No image provided"}), 400
 
         file = request.files["image"]
-        data = get_gemini_classification(file.stream)
+        
+        # SAVE IMAGE (Crucial for Lens fallback)
+        ext = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
+        filename = f"{uuid.uuid4().hex}.{ext}"
+        upload_dir = os.path.join(app.static_folder, "uploads")
+        os.makedirs(upload_dir, exist_ok=True)
+        filepath = os.path.join(upload_dir, filename)
+        file.save(filepath)
+        
+        # Public URL for the image
+        image_url = url_for('static', filename=f'uploads/{filename}', _external=True)
+        
+        # TRY GEMINI
+        data = get_gemini_classification(filepath)
         
         if not data:
-            return jsonify({"error": "AI could not identify the dog. Please use a clearer photo."}), 500
+            # FALLBACK TO LENS DATA
+            # We provide the image URL so frontend can open Lens
+            lens_url = f"https://lens.google.com/uploadbyurl?url={image_url}"
+            return jsonify({
+                "error": "AI classification blocked. Use Google Lens instead?",
+                "fallback_url": lens_url,
+                "image_url": image_url
+            }), 200 # Return 200 so frontend can handle the UI
 
         results = [{
             "breed": data.get("breed", "Unknown"),
             "confidence": data.get("confidence", 0.9),
-            "description": data.get("description", {
-                "short_desc": "Information not available.",
-                "traits": ["Loyal"],
-                "fun_fact": "N/A"
-            }),
-            "temp_file_name": file.filename
+            "description": data.get("description", {}),
+            "image_url": image_url
         }]
 
         gc.collect()
         return jsonify({"predictions": results})
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/generate_pdf", methods=["POST"])
-def generate_pdf():
-    # Simple PDF generation to keep it lightweight
-    try:
-        data = request.get_json() or {}
-        breed = data.get("breed", "Unknown Dog")
-        
-        from reportlab.pdfgen import canvas
-        from reportlab.lib.pagesizes import letter
-        
-        pdf_filename = f"report_{uuid.uuid4().hex[:8]}.pdf"
-        reports_dir = os.path.join(app.static_folder, "reports")
-        os.makedirs(reports_dir, exist_ok=True)
-        pdf_path = os.path.join(reports_dir, pdf_filename)
-
-        c = canvas.Canvas(pdf_path, pagesize=letter)
-        c.drawString(100, 750, f"PawPrint AI Breed Report: {breed}")
-        c.save()
-
-        return jsonify({"pdf_url": url_for("static", filename=f"reports/{pdf_filename}", _external=True)})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
