@@ -1,8 +1,8 @@
 flask
 flask-cors
-tflite-runtime
+tensorflow>=2.13.0
 pillow
-numpy>=1.26.4
+numpy>=1.26.4,<2.0.0
 reportlab
 python-dotenv
 gunicorn
