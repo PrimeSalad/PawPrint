@@ -1,22 +1,31 @@
 const fileUpload = document.getElementById("fileUpload");
 const preview = document.getElementById("preview");
 
-// Change this if your server runs elsewhere
-const PREDICT_URL = "http://localhost:5000/predict";
-const GENERATE_PDF_URL = "http://localhost:5000/generate_pdf";
+// Use Vercel env var in production, fallback to localhost for local development
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const PREDICT_URL = `${API_BASE_URL}/predict`;
+const GENERATE_PDF_URL = `${API_BASE_URL}/generate_pdf`;
+
+console.log("API_BASE_URL:", API_BASE_URL);
 
 let uploadedFile = null;
 
-function animateElement(el, { opacity = [0, 1], translateY = [20, 0], duration = 600, delay = 0 } = {}) {
-  el.animate([
-    { opacity: opacity[0], transform: `translateY(${translateY[0]}px)` },
-    { opacity: opacity[1], transform: `translateY(${translateY[1]}px)` }
-  ], {
-    duration: duration,
-    delay: delay,
-    fill: 'forwards',
-    easing: 'ease-out'
-  });
+function animateElement(
+  el,
+  { opacity = [0, 1], translateY = [20, 0], duration = 600, delay = 0 } = {}
+) {
+  el.animate(
+    [
+      { opacity: opacity[0], transform: `translateY(${translateY[0]}px)` },
+      { opacity: opacity[1], transform: `translateY(${translateY[1]}px)` },
+    ],
+    {
+      duration,
+      delay,
+      fill: "forwards",
+      easing: "ease-out",
+    }
+  );
 }
 
 fileUpload.addEventListener("change", async function () {
@@ -38,7 +47,10 @@ fileUpload.addEventListener("change", async function () {
   form.append("image", file);
 
   try {
-    const res = await fetch(PREDICT_URL, { method: "POST", body: form });
+    const res = await fetch(PREDICT_URL, {
+      method: "POST",
+      body: form,
+    });
 
     if (!res.ok) {
       const text = await res.text();
@@ -47,19 +59,26 @@ fileUpload.addEventListener("change", async function () {
     }
 
     const data = await res.json();
+
     if (data.error) {
       preview.innerHTML = `<p class="text-red-600">Error: ${data.error}</p>`;
       return;
     }
 
+    if (!data.predictions || !data.predictions.length) {
+      preview.innerHTML = `<p class="text-red-600">No predictions returned.</p>`;
+      return;
+    }
+
     const top = data.predictions[0];
     const confidence = Math.round(top.confidence * 100);
-    const desc = top.description;
+    const desc = top.description || {
+      short_desc: "No description available.",
+      traits: [],
+      fun_fact: "No fun fact available.",
+    };
     const breedClean = top.breed.replace(/_/g, " ").toUpperCase();
 
-    // Use a placeholder if example image is not found in the same folder
-    // Since frontend and backend are separate, we might need a better way to handle images
-    // For now, we assume frontend has its own static folder for examples
     const exampleImg = `static/breed_examples/${top.breed}.jpg`;
 
     preview.innerHTML = `
@@ -96,12 +115,16 @@ fileUpload.addEventListener("change", async function () {
                     <span class="material-symbols-outlined">pets</span> Key Traits
                 </h4>
                 <ul class="space-y-3">
-                    ${desc.traits.map(trait => `
+                    ${(desc.traits || [])
+                      .map(
+                        (trait) => `
                         <li class="flex items-center gap-3 text-[#555]">
                             <span class="w-2 h-2 bg-[#e26215] rounded-full"></span>
                             ${trait}
                         </li>
-                    `).join('')}
+                    `
+                      )
+                      .join("")}
                 </ul>
             </div>
 
@@ -130,12 +153,13 @@ fileUpload.addEventListener("change", async function () {
       </div>
     `;
 
-    // Add event listener for PDF generation
-    document.getElementById("generatePdfBtn").addEventListener("click", async function() {
+    document
+      .getElementById("generatePdfBtn")
+      .addEventListener("click", async function () {
         const breed = this.getAttribute("data-breed");
         const btnText = document.getElementById("pdfBtnText");
         const spinner = document.getElementById("pdfSpinner");
-        
+
         btnText.innerText = "GENERATING...";
         spinner.classList.add("animate-spin");
         spinner.classList.remove("hidden");
@@ -143,42 +167,44 @@ fileUpload.addEventListener("change", async function () {
         this.classList.add("opacity-50", "cursor-not-allowed");
 
         try {
-            const pdfRes = await fetch(GENERATE_PDF_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ breed: breed })
-            });
-            const pdfData = await pdfRes.json();
-            
-            if (pdfData.pdf_url) {
-                window.open(pdfData.pdf_url, "_blank");
-            } else {
-                alert("Failed to generate PDF: " + (pdfData.error || "Unknown error"));
-            }
-        } catch (e) {
-            console.error(e);
-            alert("Error connecting to PDF generator.");
-        } finally {
-            btnText.innerText = "GENERATE PDF REPORT";
-            spinner.classList.remove("animate-spin");
-            spinner.classList.add("hidden");
-            this.disabled = false;
-            this.classList.remove("opacity-50", "cursor-not-allowed");
-        }
-    });
+          const pdfRes = await fetch(GENERATE_PDF_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ breed }),
+          });
 
-    // Trigger progress circle animation
+          const pdfData = await pdfRes.json();
+
+          if (pdfData.pdf_url) {
+            window.open(pdfData.pdf_url, "_blank");
+          } else {
+            alert("Failed to generate PDF: " + (pdfData.error || "Unknown error"));
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Error connecting to PDF generator.");
+        } finally {
+          btnText.innerText = "GENERATE PDF REPORT";
+          spinner.classList.remove("animate-spin");
+          spinner.classList.add("hidden");
+          this.disabled = false;
+          this.classList.remove("opacity-50", "cursor-not-allowed");
+        }
+      });
+
     setTimeout(() => {
-        const circle = document.getElementById("progressCircle");
-        const circumference = 502.4;
-        const offset = circumference - (confidence / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
+      const circle = document.getElementById("progressCircle");
+      const circumference = 502.4;
+      const offset = circumference - (confidence / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
     }, 100);
 
-    animateElement(document.getElementById("resultBox"), { opacity: [0, 1], translateY: [30, 0] });
-
+    animateElement(document.getElementById("resultBox"), {
+      opacity: [0, 1],
+      translateY: [30, 0],
+    });
   } catch (err) {
     console.error(err);
     preview.innerHTML = `<p class="text-red-600">Failed to connect to backend.</p>`;
