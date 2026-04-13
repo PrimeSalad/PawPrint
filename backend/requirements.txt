@@ -1,6 +1,6 @@
 flask
 flask-cors
-google-generativeai
+tensorflow-cpu
 pillow
 numpy
 reportlab

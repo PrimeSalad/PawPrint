@@ -65,26 +65,6 @@ fileUpload.addEventListener("change", async function () {
 
     const data = await res.json();
 
-    if (data.fallback_url) {
-      preview.innerHTML = `
-        <div class="flex flex-col items-center gap-8 w-full max-w-[600px] mt-12 mx-auto p-10 bg-white rounded-[2rem] shadow-xl border border-[#e26215]/20">
-          <div class="w-20 h-20 bg-[#e26215]/10 rounded-full flex items-center justify-center">
-            <span class="material-symbols-outlined text-[3rem] text-[#e26215]">info</span>
-          </div>
-          <div class="text-center">
-            <h3 class="text-2xl font-black text-[#e26215] mb-2 font-poppins uppercase">AI Identification Blocked</h3>
-            <p class="text-[#8a4f2a]/80 font-medium">Google's safety filters prevented an automatic match. You can still identify your dog using Google Lens below.</p>
-          </div>
-          <img src="${data.image_url}" class="w-48 h-32 object-cover rounded-xl border-2 border-[#eee]" />
-          <a href="${data.fallback_url}" target="_blank" 
-             class="w-full py-4 bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white font-bold rounded-full text-center shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1">
-             SEARCH WITH GOOGLE LENS
-          </a>
-        </div>
-      `;
-      return;
-    }
-
     if (data.error) {
       preview.innerHTML = `<p class="text-red-600">Error: ${data.error}</p>`;
       return;

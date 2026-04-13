@@ -1,47 +1,45 @@
 import os
 import json
 import uuid
-import textwrap
 import gc
 from datetime import datetime
+
+# CRITICAL FOR RENDER FREE TIER (512MB RAM):
+# Disable GPU, limit threading, and minimize memory footprint
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 from flask import Flask, request, jsonify, url_for, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv
 from PIL import Image
-import google.generativeai as genai
+import numpy as np
+import tensorflow as tf
 
-# -----------------------------
-# LOAD ENVIRONMENT VARIABLES
-# -----------------------------
-load_dotenv()
+# Force single-thread to prevent OOM/Timeout
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-PORT = int(os.getenv("PORT", 5000))
-
-# Configure Gemini
-model_gemini = None
-if GEMINI_API_KEY and GEMINI_API_KEY != "your_api_key_here":
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model_gemini = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
-            generation_config={
-                "temperature": 0.4,
-                "response_mime_type": "application/json",
-            }
-        )
-        print("Gemini Vision (with Lens Fallback) configured.")
-    except Exception as e:
-        print(f"Gemini failed: {e}")
-else:
-    print("GEMINI_API_KEY missing.")
-
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
 
 # -----------------------------
 # FLASK APP & CORS
 # -----------------------------
+load_dotenv()
+PORT = int(os.getenv("PORT", 5000))
+
 app = Flask(__name__, static_folder="static")
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        res = make_response()
+        res.headers["Access-Control-Allow-Origin"] = "*"
+        res.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        res.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        return res
 
 @app.after_request
 def add_cors(response):
@@ -54,26 +52,56 @@ CORS(app)
 
 
 # -----------------------------
+# LOAD TENSORFLOW MODEL
+# -----------------------------
+IMG_SIZE = 224
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "dog_model")
+LABELS_PATH = os.path.join(BASE_DIR, "labels.json")
+
+model = None
+infer = None
+idx_to_class = {}
+
+print("Loading TensorFlow CPU model...")
+try:
+    # Load model with minimal memory footprint
+    model = tf.saved_model.load(MODEL_PATH)
+    infer = model.signatures["serving_default"]
+    print("Model loaded successfully.")
+    
+    with open(LABELS_PATH, "r", encoding="utf-8") as f:
+        class_indices = json.load(f)
+    idx_to_class = {v: k for k, v in class_indices.items()}
+    print(f"Loaded {len(idx_to_class)} labels.")
+    
+    # Run a dummy prediction to warm up the model and allocate memory
+    dummy_input = tf.zeros([1, IMG_SIZE, IMG_SIZE, 3], dtype=tf.float32)
+    infer(dummy_input)
+    print("Model warmed up.")
+except Exception as e:
+    print(f"CRITICAL: Failed to load model or labels: {e}")
+
+
+# -----------------------------
 # HELPERS
 # -----------------------------
-def get_gemini_classification(image_path):
-    if not model_gemini:
-        return None
+def preprocess_image(image_stream):
+    """Resize and normalize the image for TensorFlow."""
+    img = Image.open(image_stream).convert("RGB")
+    img = img.resize((IMG_SIZE, IMG_SIZE))
+    img_array = np.array(img).astype(np.float32) / 255.0
+    return np.expand_dims(img_array, axis=0)
 
-    prompt = """
-    Identify the dog breed. Return ONLY JSON:
-    {"breed": "Name", "confidence": 0.9, "description": {"short_desc": "...", "traits": [], "fun_fact": "..."}}
-    """
 
-    try:
-        img = Image.open(image_path).convert("RGB")
-        img.thumbnail((800, 800))
-        response = model_gemini.generate_content([prompt, img])
-        if not response or not response.text:
-            return None
-        return json.loads(response.text)
-    except Exception:
-        return None
+def get_hardcoded_info(breed):
+    """Fallback data since Gemini is removed."""
+    # Basic default dictionary
+    return {
+        "short_desc": f"The {breed.replace('_', ' ')} is a recognized canine breed known for its distinct features.",
+        "traits": ["Loyal", "Energetic", "Companion"],
+        "fun_fact": f"This breed has unique physical and behavioral traits."
+    }
 
 
 # -----------------------------
@@ -81,50 +109,75 @@ def get_gemini_classification(image_path):
 # -----------------------------
 @app.route("/")
 def index():
-    return jsonify({"status": "online", "fallback": "Google Lens Enabled"})
+    return jsonify({
+        "status": "online", 
+        "engine": "Local TensorFlow CPU",
+        "model_loaded": infer is not None
+    })
 
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
+        if infer is None:
+            return jsonify({"error": "TensorFlow Model not loaded on server."}), 500
+
         if "image" not in request.files:
             return jsonify({"error": "No image provided"}), 400
 
         file = request.files["image"]
-        
-        # SAVE IMAGE (Crucial for Lens fallback)
-        ext = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
-        filename = f"{uuid.uuid4().hex}.{ext}"
-        upload_dir = os.path.join(app.static_folder, "uploads")
-        os.makedirs(upload_dir, exist_ok=True)
-        filepath = os.path.join(upload_dir, filename)
-        file.save(filepath)
-        
-        # Public URL for the image
-        image_url = url_for('static', filename=f'uploads/{filename}', _external=True)
-        
-        # TRY GEMINI
-        data = get_gemini_classification(filepath)
-        
-        if not data:
-            # FALLBACK TO LENS DATA
-            # We provide the image URL so frontend can open Lens
-            lens_url = f"https://lens.google.com/uploadbyurl?url={image_url}"
-            return jsonify({
-                "error": "AI classification blocked. Use Google Lens instead?",
-                "fallback_url": lens_url,
-                "image_url": image_url
-            }), 200 # Return 200 so frontend can handle the UI
+        if file.filename == "":
+            return jsonify({"error": "Empty file uploaded"}), 400
 
+        # Preprocess and predict
+        x = preprocess_image(file.stream)
+        preds_dict = infer(tf.constant(x))
+        preds = list(preds_dict.values())[0].numpy()[0]
+
+        # Get top prediction
+        top_idx = int(preds.argsort()[-1])
+        breed = idx_to_class.get(top_idx, "Unknown Breed")
+        confidence = float(preds[top_idx])
+
+        # Prepare response
+        description = get_hardcoded_info(breed)
         results = [{
-            "breed": data.get("breed", "Unknown"),
-            "confidence": data.get("confidence", 0.9),
-            "description": data.get("description", {}),
-            "image_url": image_url
+            "breed": breed,
+            "confidence": confidence,
+            "description": description,
+            "temp_file_name": file.filename
         }]
 
+        # CRITICAL: Force garbage collection to free RAM immediately
+        del x, preds_dict, preds
         gc.collect()
+
         return jsonify({"predictions": results})
 
+    except Exception as e:
+        print(f"Prediction Error: {e}")
+        gc.collect()
+        return jsonify({"error": f"Server crash during prediction: {str(e)}"}), 500
+
+@app.route("/generate_pdf", methods=["POST"])
+def generate_pdf():
+    try:
+        data = request.get_json(silent=True) or {}
+        breed = data.get("breed", "Unknown Dog").replace('_', ' ')
+        
+        pdf_filename = f"report_{uuid.uuid4().hex[:8]}.pdf"
+        reports_dir = os.path.join(app.static_folder, "reports")
+        os.makedirs(reports_dir, exist_ok=True)
+        pdf_path = os.path.join(reports_dir, pdf_filename)
+
+        c = canvas.Canvas(pdf_path, pagesize=letter)
+        c.setFont("Helvetica-Bold", 20)
+        c.drawString(100, 700, f"BREED REPORT: {breed.upper()}")
+        c.setFont("Helvetica", 12)
+        c.drawString(100, 670, f"The {breed} is a recognized canine breed known for its distinct features.")
+        c.save()
+
+        pdf_url = url_for("static", filename=f"reports/{pdf_filename}", _external=True)
+        return jsonify({"pdf_url": pdf_url})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
