@@ -22,14 +22,7 @@ from reportlab.lib import colors
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://pawprint-ai-beta.vercel.app")
 PORT = int(os.getenv("PORT", 5000))
-
-ALLOWED_ORIGINS = [
-    FRONTEND_URL,
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
 
 # Configure Gemini if available
 model_gemini = None
@@ -50,13 +43,8 @@ else:
 # -----------------------------
 app = Flask(__name__, static_folder="static")
 
-CORS(
-    app,
-    resources={r"/*": {"origins": ALLOWED_ORIGINS}},
-    methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
-    supports_credentials=False,
-)
+# Force allow all origins for now
+CORS(app)
 
 
 # -----------------------------
@@ -166,16 +154,12 @@ def health():
             "model_loaded": infer is not None,
             "labels_loaded": bool(idx_to_class),
             "gemini_configured": model_gemini is not None,
-            "allowed_origins": ALLOWED_ORIGINS,
         }
     )
 
 
-@app.route("/predict", methods=["POST", "OPTIONS"])
+@app.route("/predict", methods=["POST"])
 def predict():
-    if request.method == "OPTIONS":
-        return "", 200
-
     try:
         if infer is None:
             return jsonify({"error": "Model not available on server"}), 500
@@ -220,11 +204,8 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/generate_pdf", methods=["POST", "OPTIONS"])
+@app.route("/generate_pdf", methods=["POST"])
 def generate_pdf():
-    if request.method == "OPTIONS":
-        return "", 200
-
     try:
         data = request.get_json(silent=True) or {}
         breed = data.get("breed", "Unknown Dog")
