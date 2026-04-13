@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: pawprint-backend
+    env: python
+    region: oregon
+    plan: free
+    
+    # Build command to install dependencies
+    buildCommand: pip install -r requirements.txt
+    
+    # Start command to run the Flask app
+    startCommand: gunicorn --bind 0.0.0.0:$PORT serve:app --timeout 120 --workers 2
+    
+    # Root directory where serve.py is located
+    rootDir: ./backend
+    
+    # Environment variables (set these in Render dashboard)
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: PORT
+        value: 5000
