@@ -10,6 +10,11 @@ from dotenv import load_dotenv
 from PIL import Image
 import numpy as np
 import tensorflow as tf
+
+# Limit TensorFlow threads to prevent Out-Of-Memory (OOM) and Timeout issues on Render Free Tier
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+
 import google.generativeai as genai
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
