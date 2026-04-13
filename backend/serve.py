@@ -2,11 +2,13 @@ import os
 import json
 import uuid
 import textwrap
+import gc
 from datetime import datetime
 
 # CRITICAL: Disable GPU and limit TensorFlow to save memory on Render Free Tier
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'false'
 
 from flask import Flask, request, jsonify, url_for, make_response
 from flask_cors import CORS
@@ -15,7 +17,7 @@ from PIL import Image
 import numpy as np
 import tensorflow as tf
 
-# Force single-thread to prevent OOM/Timeout
+# Force single-thread to prevent OOM/Timeout on Render Free Tier
 tf.config.threading.set_inter_op_parallelism_threads(1)
 tf.config.threading.set_intra_op_parallelism_threads(1)
 
@@ -25,18 +27,9 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 
 # -----------------------------
-# FLASK APP & CORS (Top Priority)
+# FLASK APP & CORS
 # -----------------------------
 app = Flask(__name__, static_folder="static")
-
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        res = make_response()
-        res.headers["Access-Control-Allow-Origin"] = "*"
-        res.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-        res.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        return res
 
 @app.after_request
 def add_cors(response):
@@ -45,7 +38,7 @@ def add_cors(response):
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     return response
 
-CORS(app) # Fallback
+CORS(app) # Secondary backup
 
 
 # -----------------------------
