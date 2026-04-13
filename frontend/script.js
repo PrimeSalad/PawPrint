@@ -3,14 +3,14 @@ const preview = document.getElementById("preview");
 
 // Detect if we are running on Vercel or locally
 const IS_PRODUCTION = window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1";
-const RENDER_BACKEND_URL = "https://pawprint-b0ao.onrender.com";
 
-// Use RENDER_BACKEND_URL in production, fallback to localhost for development
-const API_BASE_URL = IS_PRODUCTION ? RENDER_BACKEND_URL : (import.meta.env.VITE_API_URL || "http://localhost:5000");
+// USE VERCEL PROXY IN PRODUCTION TO BYPASS CORS
+// Browser -> Vercel (/api/predict) -> Render (https://.../predict)
+const API_BASE_URL = IS_PRODUCTION ? "/api" : (import.meta.env.VITE_API_URL || "http://localhost:5000");
 const PREDICT_URL = `${API_BASE_URL}/predict`;
 const GENERATE_PDF_URL = `${API_BASE_URL}/generate_pdf`;
 
-console.log("Environment:", IS_PRODUCTION ? "Production" : "Development");
+console.log("Environment:", IS_PRODUCTION ? "Production (Vercel Proxy)" : "Development");
 console.log("API_BASE_URL:", API_BASE_URL);
 
 let uploadedFile = null;

@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/api/:path*", "destination": "https://pawprint-b0ao.onrender.com/:path*" },
     { "source": "/test", "destination": "/index.html" },
     { "source": "/about", "destination": "/index.html" },
     { "source": "/team", "destination": "/index.html" },
