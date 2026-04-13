@@ -33,6 +33,7 @@ function animateElement(
   );
 }
 
+
 fileUpload.addEventListener("change", async function () {
   const file = this.files[0];
   if (!file) return;
