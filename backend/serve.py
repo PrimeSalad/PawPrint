@@ -7,17 +7,23 @@ from datetime import datetime
 from PIL import Image
 
 # Use tflite_runtime if possible to save memory, fallback to full tensorflow
+tflite = None
 try:
-    import tflite_runtime.interpreter as tflite
-    print("Using tflite_runtime.")
+    import tflite_runtime.interpreter as tflite_interp
+    tflite = tflite_interp
+    print("[OK] Using tflite_runtime (optimized).")
 except ImportError:
     try:
-        import tensorflow.lite as tflite
-        print("Using tensorflow.lite.")
+        import tensorflow.lite as tflite_tf
+        tflite = tflite_tf
+        print("[OK] Using tensorflow.lite (full TensorFlow).")
     except ImportError:
         import tensorflow as tf
         tflite = tf.lite
-        print("Using full tensorflow.lite.")
+        print("[OK] Using tensorflow.lite (from full TensorFlow).")
+        
+if tflite is None:
+    raise ImportError("TFLite interpreter not available. Please install tensorflow or tflite-runtime.")
 
 from flask import Flask, request, jsonify, url_for, make_response
 from flask_cors import CORS
@@ -72,21 +78,43 @@ idx_to_class = {}
 print(f"Loading TFLite model from {TFLITE_MODEL_PATH}...")
 try:
     if os.path.exists(TFLITE_MODEL_PATH):
-        interpreter = tflite.Interpreter(model_path=TFLITE_MODEL_PATH)
-        interpreter.allocate_tensors()
-        
-        input_details = interpreter.get_input_details()
-        output_details = interpreter.get_output_details()
-        print("TFLite Model loaded successfully.")
-        
-        with open(LABELS_PATH, "r", encoding="utf-8") as f:
-            class_indices = json.load(f)
-        idx_to_class = {v: k for k, v in class_indices.items()}
-        print(f"Loaded {len(idx_to_class)} labels.")
+        print(f"  [INFO] Model file found ({os.path.getsize(TFLITE_MODEL_PATH) / 1024 / 1024:.2f} MB)")
+        try:
+            interpreter = tflite.Interpreter(model_path=TFLITE_MODEL_PATH)
+            interpreter.allocate_tensors()
+            
+            input_details = interpreter.get_input_details()
+            output_details = interpreter.get_output_details()
+            print("[OK] TFLite Model loaded successfully.")
+            
+            with open(LABELS_PATH, "r", encoding="utf-8") as f:
+                class_indices = json.load(f)
+            idx_to_class = {v: k for k, v in class_indices.items()}
+            print(f"[OK] Loaded {len(idx_to_class)} labels.")
+        except Exception as e:
+            print(f"[ERROR] Model loading failed: {type(e).__name__}: {str(e)}")
+            print(f"[INFO] Attempting workaround: reloading interpreter...")
+            try:
+                # Try reloading with different settings
+                interpreter = None
+                import gc
+                gc.collect()
+                interpreter = tflite.Interpreter(model_path=TFLITE_MODEL_PATH)
+                interpreter.allocate_tensors()
+                input_details = interpreter.get_input_details()
+                output_details = interpreter.get_output_details()
+                print("[OK] Model loaded with workaround.")
+                with open(LABELS_PATH, "r", encoding="utf-8") as f:
+                    class_indices = json.load(f)
+                idx_to_class = {v: k for k, v in class_indices.items()}
+                print(f"[OK] Loaded {len(idx_to_class)} labels.")
+            except Exception as e2:
+                print(f"[CRITICAL] TFLite model still failed: {str(e2)}")
+                print(f"[INFO] Using TensorFlow directly may help on Render.")
     else:
-        print(f"CRITICAL: TFLite model not found at {TFLITE_MODEL_PATH}")
+        print(f"[CRITICAL] TFLite model not found at {TFLITE_MODEL_PATH}")
 except Exception as e:
-    print(f"CRITICAL: Failed to load TFLite model or labels: {e}")
+    print(f"[CRITICAL] Unexpected error during model setup: {e}")
 
 
 # -----------------------------
