@@ -105,7 +105,11 @@ def get_gemini_classification(image_data):
 # -----------------------------
 @app.route("/")
 def index():
-    return "PawPrint Backend API (Gemini Powered) is running."
+    return jsonify({
+        "status": "online",
+        "message": "PawPrint AI (Gemini Edition) is running.",
+        "version": "2.0.0"
+    })
 
 
 @app.route("/health")
@@ -113,8 +117,8 @@ def health():
     return jsonify(
         {
             "status": "ok",
-            "gemini_configured": model_gemini is not None,
-            "engine": "Gemini 1.5 Flash (Vision Capability)"
+            "gemini_ready": model_gemini is not None,
+            "timestamp": datetime.now().isoformat()
         }
     )
 
