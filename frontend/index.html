@@ -80,19 +80,19 @@
         aria-label="Main navigation"
         class="hidden md:flex gap-8 lg:gap-12 font-poppins font-bold uppercase text-[#8a4f2a]/80 text-[13px] tracking-[2px]"
       >
-        <a href="/" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+        <a href="/" class="nav-link hover:text-[#e26215] transition-colors duration-300 relative group" data-path="/">
           HOME
           <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
         </a>
-        <a href="#test-section" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+        <a href="/test" class="nav-link hover:text-[#e26215] transition-colors duration-300 relative group" data-path="/test" data-target="test-section">
           TEST
           <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
         </a>
-        <a href="#about" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+        <a href="/about" class="nav-link hover:text-[#e26215] transition-colors duration-300 relative group" data-path="/about" data-target="about">
           ABOUT
           <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
         </a>
-        <a href="#team" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+        <a href="/team" class="nav-link hover:text-[#e26215] transition-colors duration-300 relative group" data-path="/team" data-target="team">
           TEAM
           <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
         </a>
@@ -100,7 +100,7 @@
 
       <!-- CTA / Mobile Toggle -->
       <div class="flex items-center gap-4 w-auto justify-end">
-        <a href="#try-free" class="hidden md:inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white font-poppins font-extrabold text-[12px] tracking-[0.15em] px-6 py-2.5 rounded-full shadow-[0_5px_15px_rgba(226,98,21,0.3)] hover:shadow-[0_8px_20px_rgba(226,98,21,0.4)] hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group/btn">
+        <a href="/scan" class="nav-link hidden md:inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white font-poppins font-extrabold text-[12px] tracking-[0.15em] px-6 py-2.5 rounded-full shadow-[0_5px_15px_rgba(226,98,21,0.3)] hover:shadow-[0_8px_20px_rgba(226,98,21,0.4)] hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group/btn" data-path="/scan" data-target="try-free">
           <span class="relative z-10">SCAN NOW</span>
           <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 z-0"></div>
         </a>
@@ -125,11 +125,11 @@
       <div class="flex-1 flex flex-col items-center justify-center pb-20 relative z-10">
         <img src="images/logo.png" alt="PawPrint" class="h-12 mb-12 drop-shadow-md" />
         <nav class="flex flex-col items-center gap-8 font-poppins font-black text-[32px] text-[#8a4f2a]">
-          <a href="/" class="mobile-link hover:text-[#e26215] transition-colors relative group">HOME<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
-          <a href="#test-section" class="mobile-link hover:text-[#e26215] transition-colors relative group">TEST<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
-          <a href="#about" class="mobile-link hover:text-[#e26215] transition-colors relative group">ABOUT<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
-          <a href="#team" class="mobile-link hover:text-[#e26215] transition-colors relative group">TEAM<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
-          <a href="#try-free" class="mobile-link mt-8 px-10 py-4 rounded-full bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white text-[18px] tracking-[0.2em] shadow-[0_15px_30px_-5px_rgba(226,98,21,0.4)]">SCAN NOW</a>
+          <a href="/" class="nav-link mobile-link hover:text-[#e26215] transition-colors relative group" data-path="/">HOME<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="/test" class="nav-link mobile-link hover:text-[#e26215] transition-colors relative group" data-path="/test" data-target="test-section">TEST<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="/about" class="nav-link mobile-link hover:text-[#e26215] transition-colors relative group" data-path="/about" data-target="about">ABOUT<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="/team" class="nav-link mobile-link hover:text-[#e26215] transition-colors relative group" data-path="/team" data-target="team">TEAM<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="/scan" class="nav-link mobile-link mt-8 px-10 py-4 rounded-full bg-gradient-to-r from-[#e26215] to-[#f15a24] text-white text-[18px] tracking-[0.2em] shadow-[0_15px_30px_-5px_rgba(226,98,21,0.4)]" data-path="/scan" data-target="try-free">SCAN NOW</a>
         </nav>
       </div>
     </div>
@@ -420,11 +420,11 @@
               <span class="material-symbols-outlined text-[1rem]">navigation</span> Navigation
             </h4>
             <ul class="space-y-4 text-[0.95rem] text-[#d4c5b9] font-medium">
-              <li><a href="/" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Home</a></li>
-              <li><a href="#test-section" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">How it Works</a></li>
-              <li><a href="#try-free" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Initialize Scan</a></li>
-              <li><a href="#about" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Our Story</a></li>
-              <li><a href="#team" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">The Team</a></li>
+              <li><a href="/" class="nav-link hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Home</a></li>
+              <li><a href="/test" class="nav-link hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block" data-target="test-section">How it Works</a></li>
+              <li><a href="/scan" class="nav-link hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block" data-target="try-free">Initialize Scan</a></li>
+              <li><a href="/about" class="nav-link hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block" data-target="about">Our Story</a></li>
+              <li><a href="/team" class="nav-link hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block" data-target="team">The Team</a></li>
             </ul>
           </div>
 
@@ -477,17 +477,76 @@
     
     <script type="module" src="script.js"></script>
     <script>
-      // Professional Routing & Intersection Observer
+      // Professional Clean URL Router
+      function navigateTo(path, targetId = null) {
+        // Update URL cleanly without hash
+        if (window.location.pathname !== path) {
+          history.pushState({ targetId }, "", path);
+        }
+        
+        // Scroll to target if exists
+        if (targetId) {
+          const element = document.getElementById(targetId);
+          if (element) {
+            window.scrollTo({
+              top: element.offsetTop - 80,
+              behavior: 'smooth'
+            });
+          }
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      // Handle back/forward buttons
+      window.addEventListener('popstate', (e) => {
+        const path = window.location.pathname;
+        const routes = {
+          '/test': 'test-section',
+          '/about': 'about',
+          '/team': 'team',
+          '/scan': 'try-free'
+        };
+        const targetId = e.state?.targetId || routes[path];
+        if (targetId) {
+          const element = document.getElementById(targetId);
+          if (element) window.scrollTo({ top: element.offsetTop - 80, behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      // Intercept link clicks
+      document.addEventListener('click', (e) => {
+        const link = e.target.closest('.nav-link');
+        if (link) {
+          e.preventDefault();
+          const path = link.getAttribute('href');
+          const targetId = link.getAttribute('data-target');
+          navigateTo(path, targetId);
+        }
+      });
+
+      // Initial scroll based on URL path
+      window.addEventListener('DOMContentLoaded', () => {
+        const path = window.location.pathname;
+        const routes = {
+          '/test': 'test-section',
+          '/about': 'about',
+          '/team': 'team',
+          '/scan': 'try-free'
+        };
+        if (routes[path]) {
+          setTimeout(() => {
+            const element = document.getElementById(routes[path]);
+            if (element) window.scrollTo({ top: element.offsetTop - 80, behavior: 'auto' });
+          }, 100);
+        }
+      });
+
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            
-            // Optional: Update URL without hash if desired
-            // if (entry.target.id && window.location.hash !== '#' + entry.target.id) {
-            //   history.replaceState(null, null, '#' + entry.target.id);
-            // }
-          }
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
         });
       }, { threshold: 0.1 });
 
@@ -496,53 +555,26 @@
         observer.observe(section);
       });
 
-      // Smooth scroll for professional navigation
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const targetId = this.getAttribute('href').substring(1);
-          const targetElement = document.getElementById(targetId);
-          
-          if (targetElement) {
-            window.scrollTo({
-              top: targetElement.offsetTop - 80,
-              behavior: 'smooth'
-            });
-            
-            // Update URL cleanly
-            history.pushState(null, null, '#' + targetId);
-          }
-        });
-      });
-
       // Mobile Menu Logic
       const mobileMenuBtn = document.getElementById('mobile-menu-btn');
       const mobileMenuClose = document.getElementById('mobile-menu-close');
       const mobileMenu = document.getElementById('mobile-menu');
       const mobileLinks = document.querySelectorAll('.mobile-link');
 
-      function openMenu() {
+      mobileMenuBtn.onclick = () => {
         mobileMenu.classList.remove('hidden');
-        setTimeout(() => {
-          mobileMenu.classList.remove('opacity-0', 'translate-y-[-100%]');
-        }, 10);
+        setTimeout(() => mobileMenu.classList.remove('opacity-0', 'translate-y-[-100%]'), 10);
         document.body.style.overflow = 'hidden';
-      }
+      };
 
-      function closeMenu() {
+      const closeMenu = () => {
         mobileMenu.classList.add('opacity-0', 'translate-y-[-100%]');
-        setTimeout(() => {
-          mobileMenu.classList.add('hidden');
-        }, 500);
+        setTimeout(() => mobileMenu.classList.add('hidden'), 500);
         document.body.style.overflow = '';
-      }
+      };
 
-      mobileMenuBtn.addEventListener('click', openMenu);
-      mobileMenuClose.addEventListener('click', closeMenu);
-      
-      mobileLinks.forEach(link => {
-        link.addEventListener('click', closeMenu);
-      });
+      mobileMenuClose.onclick = closeMenu;
+      mobileLinks.forEach(link => link.onclick = closeMenu);
     </script>
   </body>
 </html>
