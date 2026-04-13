@@ -4,14 +4,18 @@ import uuid
 import textwrap
 from datetime import datetime
 
-from flask import Flask, request, jsonify, url_for
+# CRITICAL: Disable GPU and limit TensorFlow to save memory on Render Free Tier
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+from flask import Flask, request, jsonify, url_for, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv
 from PIL import Image
 import numpy as np
 import tensorflow as tf
 
-# Limit TensorFlow threads to prevent Out-Of-Memory (OOM) and Timeout issues on Render Free Tier
+# Force single-thread to prevent OOM/Timeout
 tf.config.threading.set_inter_op_parallelism_threads(1)
 tf.config.threading.set_intra_op_parallelism_threads(1)
 
@@ -20,53 +24,28 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 
-
 # -----------------------------
-# LOAD ENVIRONMENT VARIABLES
-# -----------------------------
-load_dotenv()
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-PORT = int(os.getenv("PORT", 5000))
-
-# Configure Gemini if available
-model_gemini = None
-if GEMINI_API_KEY and GEMINI_API_KEY != "your_api_key_here":
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model_gemini = genai.GenerativeModel("gemini-2.5-flash")
-        print("Gemini configured.")
-    except Exception as e:
-        print(f"Gemini configuration failed: {e}")
-        model_gemini = None
-else:
-    print("Warning: GEMINI_API_KEY not set. Using fallback descriptions.")
-
-
-# -----------------------------
-# FLASK APP
+# FLASK APP & CORS (Top Priority)
 # -----------------------------
 app = Flask(__name__, static_folder="static")
 
-# Explicitly handle OPTIONS and CORS at the very beginning
 @app.before_request
 def handle_preflight():
     if request.method == "OPTIONS":
-        res = app.make_default_options_response()
+        res = make_response()
         res.headers["Access-Control-Allow-Origin"] = "*"
-        res.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS, PUT, DELETE"
+        res.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
         res.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         return res
 
 @app.after_request
-def add_cors_headers(response):
+def add_cors(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS, PUT, DELETE"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     return response
 
-# Standard CORS as backup
-CORS(app)
+CORS(app) # Fallback
 
 
 # -----------------------------
