@@ -43,8 +43,14 @@ else:
 # -----------------------------
 app = Flask(__name__, static_folder="static")
 
-# Force allow all origins for now
-CORS(app)
+# Professional CORS Configuration
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 
 # -----------------------------
