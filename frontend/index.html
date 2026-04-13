@@ -71,7 +71,7 @@
     <!-- NAVIGATION -->
     <header class="fixed top-5 right-5 md:right-auto md:top-4 md:left-1/2 md:-translate-x-1/2 z-50 md:w-[95%] md:max-w-[900px] md:bg-white/60 md:backdrop-blur-2xl md:border md:border-white/60 md:shadow-[0_10px_40px_-10px_rgba(226,98,21,0.15)] md:rounded-full md:px-8 md:py-3 flex justify-end md:justify-between items-center transition-all duration-500 hover:md:bg-white/80 hover:md:shadow-[0_15px_40px_-10px_rgba(226,98,21,0.2)]">
       <!-- Logo -->
-      <a href="#" class="hidden md:flex items-center gap-2 shrink-0 group">
+      <a href="/" class="hidden md:flex items-center gap-2 shrink-0 group">
         <img src="images/logo.png" alt="PawPrint" class="h-10 object-contain group-hover:scale-105 transition-transform duration-300" />
       </a>
 
@@ -80,7 +80,7 @@
         aria-label="Main navigation"
         class="hidden md:flex gap-8 lg:gap-12 font-poppins font-bold uppercase text-[#8a4f2a]/80 text-[13px] tracking-[2px]"
       >
-        <a href="#" class="hover:text-[#e26215] transition-colors duration-300 relative group">
+        <a href="/" class="hover:text-[#e26215] transition-colors duration-300 relative group">
           HOME
           <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span>
         </a>
@@ -125,7 +125,7 @@
       <div class="flex-1 flex flex-col items-center justify-center pb-20 relative z-10">
         <img src="images/logo.png" alt="PawPrint" class="h-12 mb-12 drop-shadow-md" />
         <nav class="flex flex-col items-center gap-8 font-poppins font-black text-[32px] text-[#8a4f2a]">
-          <a href="#" class="mobile-link hover:text-[#e26215] transition-colors relative group">HOME<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
+          <a href="/" class="mobile-link hover:text-[#e26215] transition-colors relative group">HOME<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
           <a href="#test-section" class="mobile-link hover:text-[#e26215] transition-colors relative group">TEST<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
           <a href="#about" class="mobile-link hover:text-[#e26215] transition-colors relative group">ABOUT<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
           <a href="#team" class="mobile-link hover:text-[#e26215] transition-colors relative group">TEAM<span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#e26215] transition-all duration-300 group-hover:w-full rounded-full"></span></a>
@@ -406,7 +406,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-8 mb-16">
           <!-- Logo & Description -->
           <div class="col-span-1 md:col-span-2 lg:col-span-1 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <a href="#" class="inline-block group">
+            <a href="/" class="inline-block group">
               <img src="images/logo.png" alt="PawPrint" class="h-20 md:h-24 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" />
             </a>
             <p class="text-[0.9rem] text-[#a08a7b] mt-6 leading-relaxed max-w-[300px]">
@@ -420,7 +420,7 @@
               <span class="material-symbols-outlined text-[1rem]">navigation</span> Navigation
             </h4>
             <ul class="space-y-4 text-[0.95rem] text-[#d4c5b9] font-medium">
-              <li><a href="#" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Home</a></li>
+              <li><a href="/" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Home</a></li>
               <li><a href="#test-section" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">How it Works</a></li>
               <li><a href="#try-free" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Initialize Scan</a></li>
               <li><a href="#about" class="hover:text-[#e26215] hover:translate-x-2 transition-all duration-300 inline-block">Our Story</a></li>
@@ -468,92 +468,51 @@
             &copy; 2026 PawPrint AI. All rights reserved.
           </p>
           <div class="flex flex-col sm:flex-row gap-2 sm:gap-6 text-[0.75rem] sm:text-[0.8rem] text-[#8a7563] font-medium text-center sm:text-left">
-            <button onclick="document.getElementById('privacy-modal').classList.remove('hidden')" class="hover:text-[#e26215] transition-colors duration-300 cursor-pointer">Privacy Policy</button>
-            <button onclick="document.getElementById('terms-modal').classList.remove('hidden')" class="hover:text-[#e26215] transition-colors duration-300 cursor-pointer">Terms of Service</button>
+            <a href="privacy.html" class="hover:text-[#e26215] transition-colors duration-300">Privacy Policy</a>
+            <a href="terms.html" class="hover:text-[#e26215] transition-colors duration-300">Terms of Service</a>
           </div>
         </div>
       </div>
     </footer>
-
-    <!-- Privacy Modal -->
-    <div id="privacy-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('privacy-modal').classList.add('hidden')"></div>
-      <div class="bg-white/90 backdrop-blur-xl rounded-[2rem] p-8 md:p-10 max-w-[700px] w-full max-h-[85vh] overflow-y-auto relative z-10 shadow-[0_20px_50px_-10px_rgba(226,98,21,0.2)] border border-[#e26215]/10">
-        <button onclick="document.getElementById('privacy-modal').classList.add('hidden')" class="absolute top-6 right-6 text-[#8a4f2a]/50 hover:text-[#e26215] transition-colors">
-          <span class="material-symbols-outlined text-[2rem]">close</span>
-        </button>
-        <h2 class="text-[1.5rem] sm:text-[2rem] font-black text-[#e26215] mb-2 font-poppins tracking-tight">Privacy Policy</h2>
-        <p class="text-[#8a4f2a]/60 font-bold uppercase tracking-widest text-xs mb-8 pb-6 border-b border-[#e26215]/10">Last Updated: April 2026</p>
-        
-        <div class="space-y-6 text-[0.95rem] leading-relaxed text-[#8a4f2a]/90 font-medium">
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">1. Data Collection</h3>
-            <p>At PawPrint AI, we prioritize your privacy. The primary data we collect includes the images you upload for canine breed classification. These images are processed by our neural network purely for analysis.</p>
-          </section>
-
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">2. Use of Images</h3>
-            <p>Uploaded images are held temporarily in our active memory cache to perform the AI classification. Once the results are generated and returned to your browser, the images are purged from our live processing servers. We do not build permanent datasets from user uploads without explicit, opt-in consent.</p>
-          </section>
-
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">3. Analytics and Tracking</h3>
-            <p>We collect basic, anonymized telemetry data (such as browser type, general location, and interaction events) to help us improve the PawPrint UI and machine learning models. This data cannot be traced back to individual users.</p>
-          </section>
-
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">4. Third-Party Services</h3>
-            <p>To provide advanced insights, we utilize the Gemini AI framework. Data passed to Gemini is strictly related to the breed classification parameters and does not contain personal identifiable information (PII).</p>
-          </section>
-        </div>
-      </div>
-    </div>
-
-    <!-- Terms Modal -->
-    <div id="terms-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('terms-modal').classList.add('hidden')"></div>
-      <div class="bg-white/90 backdrop-blur-xl rounded-[2rem] p-8 md:p-10 max-w-[700px] w-full max-h-[85vh] overflow-y-auto relative z-10 shadow-[0_20px_50px_-10px_rgba(226,98,21,0.2)] border border-[#e26215]/10">
-        <button onclick="document.getElementById('terms-modal').classList.add('hidden')" class="absolute top-6 right-6 text-[#8a4f2a]/50 hover:text-[#e26215] transition-colors">
-          <span class="material-symbols-outlined text-[2rem]">close</span>
-        </button>
-        <h2 class="text-[1.5rem] sm:text-[2rem] font-black text-[#e26215] mb-2 font-poppins tracking-tight">Terms of Service</h2>
-        <p class="text-[#8a4f2a]/60 font-bold uppercase tracking-widest text-xs mb-8 pb-6 border-b border-[#e26215]/10">Last Updated: April 2026</p>
-        
-        <div class="space-y-6 text-[0.95rem] leading-relaxed text-[#8a4f2a]/90 font-medium">
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">1. Acceptance of Terms</h3>
-            <p>By accessing or using the PawPrint AI website and classifier tool, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access our service.</p>
-          </section>
-
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">2. Description of Service</h3>
-            <p>PawPrint AI provides a machine learning-based image analysis tool designed to estimate canine breeds and provide general pet care insights. The results generated are estimates based on pattern recognition and should not replace professional veterinary advice or certified DNA testing.</p>
-          </section>
-
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">3. User Conduct</h3>
-            <p>You agree not to use the service for any unlawful purpose or in any way that interrupts, damages, or impairs the functionality of the service. Uploading inappropriate, malicious, or non-canine images to purposefully stress the neural network is prohibited.</p>
-          </section>
-
-          <section>
-            <h3 class="text-xl font-black text-[#e26215] font-poppins mb-2">4. Intellectual Property</h3>
-            <p>The PawPrint AI logo, UI design, text, and proprietary algorithms are owned by the PawPrint development team. You may not reproduce or duplicate our system without explicit permission. User-uploaded images remain the property of the respective users.</p>
-          </section>
-        </div>
-      </div>
-    </div>
     
     <script type="module" src="script.js"></script>
     <script>
+      // Professional Routing & Intersection Observer
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            
+            // Optional: Update URL without hash if desired
+            // if (entry.target.id && window.location.hash !== '#' + entry.target.id) {
+            //   history.replaceState(null, null, '#' + entry.target.id);
+            // }
+          }
         });
       }, { threshold: 0.1 });
 
       document.querySelectorAll('section').forEach(section => {
         section.classList.add('fade-in-section');
         observer.observe(section);
+      });
+
+      // Smooth scroll for professional navigation
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
+            
+            // Update URL cleanly
+            history.pushState(null, null, '#' + targetId);
+          }
+        });
       });
 
       // Mobile Menu Logic
@@ -564,7 +523,6 @@
 
       function openMenu() {
         mobileMenu.classList.remove('hidden');
-        // Small delay to allow display block to apply before transition
         setTimeout(() => {
           mobileMenu.classList.remove('opacity-0', 'translate-y-[-100%]');
         }, 10);
@@ -575,7 +533,7 @@
         mobileMenu.classList.add('opacity-0', 'translate-y-[-100%]');
         setTimeout(() => {
           mobileMenu.classList.add('hidden');
-        }, 500); // match transition duration
+        }, 500);
         document.body.style.overflow = '';
       }
 
