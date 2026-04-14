@@ -334,13 +334,13 @@ fileUpload.addEventListener("change", async function () {
               
               <!-- Specs Row -->
               <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white rounded-2xl p-5 border border-white/60 shadow-sm hover:shadow-md transition-shadow">
-                  <span class="text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Origin</span>
-                  <span class="text-sm font-bold text-[#2d1810] font-poppins block truncate">${desc.origin || "Global"}</span>
+                <div class="bg-white rounded-2xl p-4 md:p-5 border border-white/60 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-center">
+                  <span class="text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1.5">Origin</span>
+                  <span class="text-[13px] md:text-sm font-bold text-[#2d1810] font-poppins block leading-tight">${desc.origin || "Global"}</span>
                 </div>
-                <div class="bg-white rounded-2xl p-5 border border-white/60 shadow-sm hover:shadow-md transition-shadow">
-                  <span class="text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Biometrics</span>
-                  <span class="text-sm font-bold text-[#2d1810] font-poppins block truncate">${desc.size || "Standard"}</span>
+                <div class="bg-white rounded-2xl p-4 md:p-5 border border-white/60 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-center">
+                  <span class="text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1.5">Biometrics</span>
+                  <span class="text-[13px] md:text-sm font-bold text-[#2d1810] font-poppins block leading-tight">${desc.size || "Standard"}</span>
                 </div>
               </div>
 
