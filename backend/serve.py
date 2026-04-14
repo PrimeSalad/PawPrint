@@ -93,7 +93,7 @@ BREED_INFO = {
         "size": "20-24 inches, 55-75 lbs",
         "temperament": "Friendly, tolerant, devoted, excellent with families",
         "health_notes": "Prone to hip dysplasia, heart disease, and cancer; needs regular exercise",
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Camponotus_flavomarginatus_ant.jpg/1024px-Golden_Retriever.jpg"
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Golden_Retriever.jpg/1024px-Golden_Retriever.jpg"
     },
     "labrador_retriever": {
         "short_desc": "The Labrador Retriever is a large, athletic dog breed known for their friendly nature and exceptional training ability. They excel as service and therapy dogs.",
