@@ -172,11 +172,8 @@ python serve.py
    - Enhanced PDF generation with professional styling
    - Fixed API routing issue (Vercel proxy Render URL)
    - Added Wikimedia Commons breed photos (12 demo breeds)
-   - Verified backend loads all 122 labels correctly
-
-   Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+   - Verified backend loads all 122 labels correctly"
    ```
-
 2. Push to GitHub:
    ```bash
    git push origin main
