@@ -6,4 +6,3 @@ numpy>=1.26.4,<2.0.0
 reportlab
 python-dotenv
 gunicorn
-google-generativeai
