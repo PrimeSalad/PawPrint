@@ -114,7 +114,7 @@ fileUpload.addEventListener("change", async function () {
 
   // Add shimmer animation
   const style = document.createElement('style');
-  style.textContent = \`
+  style.textContent = `
     @keyframes shimmer {
       0% { background-position: 200% 0; }
       50% { background-position: -200% 0; }
@@ -126,7 +126,7 @@ fileUpload.addEventListener("change", async function () {
       90% { opacity: 1; }
       100% { transform: translateY(400%); opacity: 0; }
     }
-  \`;
+  `;
   document.head.appendChild(style);
 
   // Simulate progress
