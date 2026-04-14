@@ -56,28 +56,78 @@ fileUpload.addEventListener("change", async function () {
 
   uploadedFile = file;
 
-  // Show progress bar loading UI
+  // Show GOD MODE premium loading UI
   preview.innerHTML = `
-    <div class="w-full flex flex-col items-center mt-16" id="loadingBox">
-      <p class="text-xl text-[#7a3f1a] mb-12 animate-pulse">🔍 Analyzing your dog's breed...</p>
-      
-      <!-- Progress Bar -->
-      <div class="w-80 mb-8">
-        <div class="flex justify-between items-center mb-3">
-          <span class="text-sm font-semibold text-[#e26215]">Scanning</span>
-          <span class="text-sm font-bold text-[#e26215]" id="progressPercent">0%</span>
-        </div>
-        <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden shadow-md">
-          <div id="progressBar" class="h-full bg-gradient-to-r from-[#e26215] to-[#ff9a56] rounded-full transition-all duration-300" style="width: 0%"></div>
-        </div>
-      </div>
+    <div class="w-full h-96 flex flex-col items-center justify-center relative" id="loadingBox">
+      <!-- Premium scanning container -->
+      <div class="relative w-full max-w-md">
+        <!-- Glow effect background -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#e26215]/20 to-[#ff9a56]/20 blur-3xl rounded-3xl"></div>
+        
+        <!-- Main card -->
+        <div class="relative bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl">
+          <!-- Header -->
+          <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-[#2d1810] font-poppins mb-2">Analyzing Breed</h2>
+            <p class="text-sm text-[#7a3f1a]/70">Advanced AI Recognition</p>
+          </div>
 
-      <!-- Animated spinner -->
-      <div class="relative w-[100px] h-[100px] flex items-center justify-center">
-        <div class="w-16 h-16 border-4 border-[#e26215] border-t-transparent rounded-full animate-spin"></div>
+          <!-- Animated scanner visualization -->
+          <div class="relative h-32 mb-8 rounded-2xl bg-gradient-to-b from-[#e26215]/10 to-transparent border border-[#e26215]/20 overflow-hidden flex items-center justify-center">
+            <!-- Scanning lines -->
+            <div class="absolute inset-0 flex flex-col justify-around opacity-30">
+              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent animate-pulse"></div>
+              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent" style="animation: scan 2.5s ease-in-out infinite; animation-delay: 0.3s;"></div>
+              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent" style="animation: scan 2.5s ease-in-out infinite; animation-delay: 0.6s;"></div>
+              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent" style="animation: scan 2.5s ease-in-out infinite; animation-delay: 0.9s;"></div>
+            </div>
+
+            <!-- Center pulsing dot -->
+            <div class="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#e26215] to-[#ff9a56] shadow-lg" style="animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
+              <div class="absolute inset-2 rounded-full bg-white/40 backdrop-blur-sm"></div>
+              <div class="absolute inset-4 rounded-full bg-gradient-to-br from-[#e26215]/80 to-[#ff9a56]/80"></div>
+            </div>
+
+            <!-- Outer ring -->
+            <div class="absolute inset-0 border-2 border-transparent bg-gradient-to-r from-[#e26215]/40 to-[#ff9a56]/40 rounded-2xl" style="animation: spin 3s linear infinite;"></div>
+          </div>
+
+          <!-- Progress bar - premium style -->
+          <div class="space-y-3">
+            <div class="flex justify-between items-end">
+              <span class="text-xs uppercase tracking-widest font-bold text-[#2d1810] font-poppins">Processing</span>
+              <span class="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#e26215] to-[#ff9a56]" id="progressPercent">0%</span>
+            </div>
+            <div class="relative h-2 bg-white/40 rounded-full overflow-hidden border border-white/60">
+              <div id="progressBar" class="h-full bg-gradient-to-r from-[#e26215] via-[#ff9a56] to-[#e26215] rounded-full transition-all duration-300 shadow-lg shadow-[#e26215]/50" style="width: 0%; background-size: 200% 100%; animation: shimmer 2s infinite;" ></div>
+            </div>
+          </div>
+
+          <!-- Status text -->
+          <div class="text-center mt-6">
+            <p class="text-sm text-[#7a3f1a]/60 font-medium">Scanning image...</p>
+          </div>
+        </div>
       </div>
     </div>
   `;
+
+  // Add shimmer animation
+  const style = document.createElement('style');
+  style.textContent = \`
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      50% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes scan {
+      0% { transform: translateY(-100%); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(400%); opacity: 0; }
+    }
+  \`;
+  document.head.appendChild(style);
 
   // Simulate progress
   let progress = 0;
