@@ -252,30 +252,30 @@ fileUpload.addEventListener("change", async function () {
     const breedImageUrl = BREED_IMAGES[breedKey] || `static/breed_examples/${top.breed}.jpg`;
 
     preview.innerHTML = `
-      <div class="flex flex-col items-center gap-8 w-full max-w-4xl mx-auto py-8" id="resultBox">
+      <div class="flex flex-col items-center gap-6 w-full max-w-3xl mx-auto py-6" id="resultBox">
         
         <!-- Premium Result Header -->
         <div class="w-full relative group">
           <!-- Glass Background -->
-          <div class="absolute inset-0 bg-white/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/60 shadow-xl transition-all duration-500 group-hover:shadow-[0_30px_80px_-20px_rgba(226,98,21,0.2)]"></div>
+          <div class="absolute inset-0 bg-white/40 backdrop-blur-2xl rounded-[2rem] border border-white/60 shadow-lg transition-all duration-500 group-hover:shadow-[0_20px_60px_-15px_rgba(226,98,21,0.15)]"></div>
           
-          <div class="relative p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 md:gap-12">
+          <div class="relative p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10">
             <!-- Left: Breed Identification -->
             <div class="flex-1 text-center md:text-left">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e26215]/10 text-[#e26215] text-[9px] font-black tracking-[0.2em] uppercase mb-4">Match Confirmed</div>
-              <h2 class="font-poppins font-black text-4xl md:text-5xl mb-4 leading-[1.1] text-[#2d1810] tracking-tighter uppercase glitch-text">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e26215]/10 text-[#e26215] text-[8px] font-black tracking-[0.2em] uppercase mb-3">Match Confirmed</div>
+              <h2 class="font-poppins font-black text-3xl md:text-4xl mb-3 leading-tight text-[#2d1810] tracking-tighter uppercase glitch-text">
                 ${breedClean}
               </h2>
-              <p class="text-[#8a4f2a] text-base md:text-lg leading-relaxed font-medium opacity-80">
+              <p class="text-[#8a4f2a] text-sm md:text-base leading-relaxed font-medium opacity-80 max-w-md">
                 ${desc.short_desc}
               </p>
             </div>
             
             <!-- Right: Confidence HUD -->
             <div class="shrink-0">
-              <div class="relative w-36 h-36 flex items-center justify-center">
+              <div class="relative w-28 h-28 flex items-center justify-center">
                 <!-- Glowing Background -->
-                <div class="absolute inset-0 bg-gradient-to-br from-[#e26215]/20 to-[#f15a24]/20 rounded-full blur-xl animate-pulse"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-[#e26215]/20 to-[#f15a24]/20 rounded-full blur-lg animate-pulse"></div>
                 
                 <svg class="absolute w-full h-full -rotate-90" viewBox="0 0 200 200">
                   <circle cx="100" cy="100" r="85" stroke="rgba(226,98,21,0.1)" stroke-width="12" fill="none"/>
@@ -291,8 +291,8 @@ fileUpload.addEventListener("change", async function () {
                   </defs>
                 </svg>
                 <div class="flex flex-col items-center relative z-10">
-                  <span class="text-4xl font-black text-[#2d1810] font-poppins">${confidence}%</span>
-                  <span class="text-[9px] uppercase tracking-[0.15em] font-bold text-[#e26215]">Precision</span>
+                  <span class="text-3xl font-black text-[#2d1810] font-poppins">${confidence}%</span>
+                  <span class="text-[8px] uppercase tracking-[0.1em] font-bold text-[#e26215]">Confidence</span>
                 </div>
               </div>
             </div>
@@ -300,99 +300,98 @@ fileUpload.addEventListener("change", async function () {
         </div>
 
         <!-- Professional Layout Grid -->
-        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           
-          <!-- Large Image Section (7/12) -->
-          <div class="lg:col-span-7 flex flex-col gap-6">
-            <div class="relative rounded-[2.5rem] overflow-hidden shadow-xl group/img border-4 border-white">
+          <!-- Left Column -->
+          <div class="flex flex-col gap-6">
+            <div class="relative rounded-[2rem] overflow-hidden shadow-lg group/img border-4 border-white aspect-[4/3] lg:aspect-auto lg:h-[300px]">
               <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
                 onerror="this.src='images/logo.png'"
-                class="w-full h-[380px] object-cover transition-transform duration-1000 group-hover/img:scale-110" />
+                class="w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-105" />
               <!-- Subtle overlay -->
               <div class="absolute inset-0 bg-gradient-to-t from-[#2d1810]/40 via-transparent to-transparent"></div>
-              <div class="absolute bottom-6 left-6 flex items-center gap-3">
-                 <div class="px-3 py-1.5 rounded-lg bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold uppercase tracking-widest">Visual Match Scan #${Math.floor(Math.random()*9000)+1000}</div>
+              <div class="absolute bottom-4 left-4 flex items-center gap-3">
+                 <div class="px-2.5 py-1 rounded-md bg-white/20 backdrop-blur-md border border-white/30 text-white text-[8px] font-bold uppercase tracking-widest">Scan ID: #${Math.floor(Math.random()*9000)+1000}</div>
               </div>
             </div>
 
-            <!-- Health Considerations - Professional Alert Style -->
-            <div class="bg-gradient-to-br from-[#1a0f08] to-[#2d1810] rounded-[2rem] p-8 text-white shadow-lg relative overflow-hidden">
-              <div class="absolute top-0 right-0 p-6 opacity-10">
-                <span class="material-symbols-outlined text-[80px]">medical_services</span>
+            <!-- Core Specs Card -->
+            <div class="bg-white rounded-[1.5rem] p-6 shadow-md border border-[#e26215]/5 flex flex-col gap-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1">
+                  <span class="text-[8px] uppercase tracking-[0.15em] font-black text-[#e26215]">Origin</span>
+                  <p class="text-sm font-bold text-[#2d1810] font-poppins truncate">${desc.origin || "Global"}</p>
+                </div>
+                <div class="flex flex-col gap-1 text-right">
+                  <span class="text-[8px] uppercase tracking-[0.15em] font-black text-[#e26215]">Biometrics</span>
+                  <p class="text-sm font-bold text-[#2d1810] font-poppins truncate">${desc.size || "Standard"}</p>
+                </div>
               </div>
-              <h4 class="font-poppins font-black text-lg mb-3 uppercase tracking-widest text-[#e26215] flex items-center gap-3">
-                <span class="w-1.5 h-6 bg-[#e26215] rounded-full"></span>
-                Health Protocol
-              </h4>
-              <p class="text-white/80 text-base leading-relaxed font-medium">
-                ${desc.health_notes || "Consult a certified veterinarian for personalized breed-specific wellness programs and nutritional guidance."}
-              </p>
+              <div class="h-px bg-[#1a0f08]/5"></div>
+              <div class="flex flex-col gap-1">
+                <span class="text-[8px] uppercase tracking-[0.15em] font-black text-[#e26215]">Temperament Profile</span>
+                <p class="text-sm font-bold text-[#2d1810] font-poppins leading-snug">${desc.temperament || "Alert & Intelligent"}</p>
+              </div>
             </div>
           </div>
 
-          <!-- Side Details Section (5/12) -->
-          <div class="lg:col-span-5 flex flex-col gap-6">
-            
-            <!-- Core Specs Card -->
-            <div class="bg-white rounded-[2rem] p-8 shadow-lg border border-[#e26215]/5 flex flex-col gap-6">
-              <div class="flex flex-col gap-1.5">
-                <span class="text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215]">Origin</span>
-                <p class="text-xl font-bold text-[#2d1810] font-poppins">${desc.origin || "Not specified"}</p>
-              </div>
-              <div class="h-px bg-[#1a0f08]/5"></div>
-              <div class="flex flex-col gap-1.5">
-                <span class="text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215]">Biometrics</span>
-                <p class="text-xl font-bold text-[#2d1810] font-poppins">${desc.size || "Standard Canine Specs"}</p>
-              </div>
-              <div class="h-px bg-[#1a0f08]/5"></div>
-              <div class="flex flex-col gap-1.5">
-                <span class="text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215]">Temperament profile</span>
-                <p class="text-xl font-bold text-[#2d1810] font-poppins">${desc.temperament || "Alert and Intelligent"}</p>
-              </div>
-            </div>
-
+          <!-- Right Column -->
+          <div class="flex flex-col gap-6">
             <!-- Key Traits Multi-Card -->
-            <div class="bg-[#fef9f6] rounded-[2rem] p-8 shadow-lg border border-[#e26215]/10">
-              <h3 class="font-poppins font-black text-lg text-[#2d1810] mb-6 uppercase tracking-widest flex items-center gap-3">
-                <span class="material-symbols-outlined text-[#e26215]">military_tech</span>
-                Key Markers
+            <div class="bg-[#fef9f6] rounded-[1.5rem] p-6 shadow-md border border-[#e26215]/10 h-full flex flex-col">
+              <h3 class="font-poppins font-black text-sm text-[#2d1810] mb-4 uppercase tracking-widest flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#e26215] text-lg">military_tech</span>
+                Genetic Markers
               </h3>
-              <div class="flex flex-wrap gap-2.5">
+              <div class="flex flex-wrap gap-2 mb-6">
                 ${(desc.traits || [])
                   .map(
                     (trait) => `
-                    <span class="px-4 py-2 bg-white border border-[#e26215]/20 rounded-xl text-[#2d1810] text-xs font-bold shadow-sm hover:border-[#e26215] hover:scale-105 transition-all cursor-default">
+                    <span class="px-3 py-1.5 bg-white border border-[#e26215]/15 rounded-lg text-[#2d1810] text-[10px] font-bold shadow-sm hover:border-[#e26215] transition-all cursor-default">
                       ${trait}
                     </span>
                   `
                   )
                   .join("")}
               </div>
+              
+              <!-- Fun Fact Professional Inset (Compact) -->
+              <div class="mt-auto bg-gradient-to-br from-[#e26215] to-[#f15a24] rounded-[1.2rem] p-5 text-white shadow-md relative overflow-hidden group">
+                <div class="absolute -bottom-6 -right-6 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+                <h3 class="font-poppins font-black text-[10px] mb-2 uppercase tracking-widest opacity-90">Insight</h3>
+                <p class="text-white text-xs leading-relaxed font-medium italic">
+                  "${desc.fun_fact}"
+                </p>
+              </div>
             </div>
 
-            <!-- Fun Fact Professional Inset -->
-            <div class="bg-gradient-to-br from-[#e26215] to-[#f15a24] rounded-[2rem] p-8 text-white shadow-lg relative overflow-hidden group">
-              <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-              <h3 class="font-poppins font-black text-lg mb-3 uppercase tracking-widest">Did You Know?</h3>
-              <p class="text-white/90 text-base leading-relaxed font-medium italic">
-                "${desc.fun_fact}"
+            <!-- Health Considerations - Alert Style (Compact) -->
+            <div class="bg-gradient-to-br from-[#1a0f08] to-[#2d1810] rounded-[1.5rem] p-6 text-white shadow-md relative overflow-hidden">
+              <div class="absolute top-0 right-0 p-4 opacity-10">
+                <span class="material-symbols-outlined text-[60px]">medical_services</span>
+              </div>
+              <h4 class="font-poppins font-black text-[10px] mb-2 uppercase tracking-widest text-[#e26215] flex items-center gap-2">
+                <span class="w-1 h-4 bg-[#e26215] rounded-full"></span>
+                Health Protocol
+              </h4>
+              <p class="text-white/80 text-xs leading-relaxed font-medium">
+                ${desc.health_notes || "Maintain regular veterinary diagnostics for optimal breed longevity."}
               </p>
             </div>
-
           </div>
         </div>
 
         <!-- Action Footer -->
-        <div class="w-full flex flex-col items-center gap-6 mt-4">
+        <div class="w-full flex flex-col items-center gap-4 mt-2">
           <button id="generatePdfBtn" data-breed="${breedClean}"
-            class="group relative font-poppins font-black text-base px-12 py-5 rounded-full bg-[#2d1810] text-white shadow-xl hover:scale-105 transition-all duration-500 overflow-hidden">
+            class="group relative font-poppins font-black text-sm px-10 py-4 rounded-full bg-[#2d1810] text-white shadow-lg hover:scale-105 transition-all duration-500 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-r from-[#e26215] to-[#f15a24] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div class="relative z-10 flex items-center gap-3">
-              <span class="material-symbols-outlined text-xl" id="pdfSpinner">description</span>
-              <span id="pdfBtnText">GENERATE ANALYTICAL REPORT</span>
+              <span class="material-symbols-outlined text-lg" id="pdfSpinner">description</span>
+              <span id="pdfBtnText">GENERATE ANALYSIS</span>
             </div>
           </button>
-          <p class="text-[9px] text-[#8a4f2a]/40 uppercase tracking-[0.3em] font-bold">Encrypted Data Stream • ISO-2026 Compliant</p>
+          <p class="text-[8px] text-[#8a4f2a]/40 uppercase tracking-[0.2em] font-bold">Encrypted Stream • ISO-2026</p>
         </div>
 
       </div>
