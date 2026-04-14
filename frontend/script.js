@@ -56,6 +56,14 @@ fileUpload.addEventListener("change", async function () {
 
   uploadedFile = file;
 
+  // Add shimmer animation styles (only once)
+  if (!document.getElementById('pawprint-animations')) {
+    const style = document.createElement('style');
+    style.id = 'pawprint-animations';
+    style.textContent = '@keyframes shimmer { 0% { background-position: 200% 0; } 50% { background-position: -200% 0; } 100% { background-position: 200% 0; } } @keyframes scan { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(400%); opacity: 0; } }';
+    document.head.appendChild(style);
+  }
+
   // Show GOD MODE premium loading UI
   preview.innerHTML = `
     <div class="w-full h-96 flex flex-col items-center justify-center relative" id="loadingBox">
@@ -111,23 +119,6 @@ fileUpload.addEventListener("change", async function () {
       </div>
     </div>
   `;
-
-  // Add shimmer animation
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      50% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    @keyframes scan {
-      0% { transform: translateY(-100%); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(400%); opacity: 0; }
-    }
-  `;
-  document.head.appendChild(style);
 
   // Simulate progress
   let progress = 0;
