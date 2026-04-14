@@ -9,8 +9,6 @@ const API_BASE_URL = IS_PRODUCTION ? "/api" : (import.meta.env.VITE_API_URL || "
 const PREDICT_URL = `${API_BASE_URL}/predict`;
 const GENERATE_PDF_URL = `${API_BASE_URL}/generate_pdf`;
 
-console.log("Environment:", IS_PRODUCTION ? "Production (Vercel Proxy)" : "Development");
-
 let uploadedFile = null;
 
 const BREED_IMAGES = {
@@ -132,12 +130,12 @@ fileUpload.addEventListener("change", async function () {
     const res = await fetch(PREDICT_URL, { method: "POST", body: form });
     clearInterval(progressInterval);
     if (!res.ok) {
-      preview.innerHTML = `<p class="text-red-600 font-bold p-8 bg-white rounded-3xl shadow-xl">Connection issue.</p>`;
+      preview.innerHTML = `<p class="text-red-600 font-bold p-8 bg-white rounded-3xl shadow-xl text-center">Connection issue.</p>`;
       return;
     }
     const data = await res.json();
     if (data.error || !data.predictions || !data.predictions.length) {
-      preview.innerHTML = `<p class="text-red-600 font-bold p-8 bg-white rounded-3xl shadow-xl">No markers detected.</p>`;
+      preview.innerHTML = `<p class="text-red-600 font-bold p-8 bg-white rounded-3xl shadow-xl text-center">No markers detected.</p>`;
       return;
     }
 
@@ -156,18 +154,18 @@ fileUpload.addEventListener("change", async function () {
     const mapImageUrl = BREED_IMAGES[breedKey];
 
     preview.innerHTML = `
-      <div class="flex flex-col items-center w-full max-w-6xl mx-auto py-4 md:py-8 px-4" id="resultBox">
-        <div class="relative w-full rounded-[2rem] md:rounded-[3.5rem] bg-white/70 backdrop-blur-2xl border border-white shadow-[0_20px_60px_-20px_rgba(226,98,21,0.2)] overflow-hidden">
+      <div class="flex flex-col items-center w-full max-w-4xl mx-auto py-4 md:py-8 px-4" id="resultBox">
+        <div class="relative w-full rounded-[2rem] md:rounded-[3rem] bg-white/70 backdrop-blur-2xl border border-white shadow-[0_20px_60px_-20px_rgba(226,98,21,0.2)] overflow-hidden">
           
           <!-- Header -->
-          <div class="p-6 md:p-12 lg:p-16 border-b border-white grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-8 md:gap-16 relative overflow-hidden bg-gradient-to-br from-white to-transparent">
+          <div class="p-6 md:p-10 border-b border-white grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-6 md:gap-12 relative overflow-hidden bg-gradient-to-br from-white to-transparent">
             <div class="text-center md:text-left z-10 order-2 md:order-1">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e26215]/10 text-[#e26215] text-[8px] md:text-[11px] font-black tracking-[0.2em] uppercase mb-4 shadow-sm border border-[#e26215]/20">Match Found</div>
-              <h2 class="font-poppins font-black text-3xl md:text-6xl lg:text-8xl mb-4 text-[#2d1810] tracking-tighter uppercase glitch-text leading-[1.1] drop-shadow-sm">${breedClean}</h2>
-              <p class="text-[#8a4f2a] text-sm md:text-xl lg:text-2xl leading-relaxed font-medium opacity-90 max-w-3xl">${desc.short_desc}</p>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e26215]/10 text-[#e26215] text-[8px] md:text-[10px] font-black tracking-[0.2em] uppercase mb-3 shadow-sm border border-[#e26215]/20">Biometric Match Found</div>
+              <h2 class="font-poppins font-black text-3xl md:text-5xl lg:text-6xl mb-3 text-[#2d1810] tracking-tighter uppercase glitch-text leading-[1.1] drop-shadow-sm">${breedClean}</h2>
+              <p class="text-[#8a4f2a] text-sm md:text-lg leading-relaxed font-medium opacity-90 max-w-2xl">${desc.short_desc}</p>
             </div>
             <div class="flex justify-center md:justify-end z-10 order-1 md:order-2">
-              <div class="relative w-32 h-32 md:w-52 md:h-52 lg:w-60 lg:h-60 flex items-center justify-center">
+              <div class="relative w-28 h-28 md:w-44 md:h-44 flex items-center justify-center">
                 <div class="absolute inset-0 bg-gradient-to-br from-[#e26215]/20 to-[#f15a24]/20 rounded-full blur-xl animate-pulse"></div>
                 <svg class="absolute w-full h-full -rotate-90" viewBox="0 0 200 200">
                   <circle cx="100" cy="100" r="85" stroke="rgba(226,98,21,0.1)" stroke-width="12" fill="none"/>
@@ -175,52 +173,52 @@ fileUpload.addEventListener("change", async function () {
                   <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#e26215"/><stop offset="100%" style="stop-color:#f15a24"/></linearGradient></defs>
                 </svg>
                 <div class="flex flex-col items-center relative z-10">
-                  <span class="text-3xl md:text-6xl lg:text-7xl font-black text-[#2d1810] font-poppins">${confidence}%</span>
-                  <span class="text-[8px] md:text-[12px] uppercase tracking-[0.2em] font-bold text-[#e26215]">Precision</span>
+                  <span class="text-3xl md:text-5xl font-black text-[#2d1810] font-poppins">${confidence}%</span>
+                  <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] font-bold text-[#e26215]">Precision</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Content -->
-          <div class="p-6 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-stretch bg-white/30">
-            <div class="lg:col-span-8 relative rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-xl border-2 md:border-4 border-white aspect-[4/3] md:aspect-[16/9] lg:aspect-auto min-h-[300px] md:min-h-[550px] bg-gray-50">
+          <!-- Content Grid -->
+          <div class="p-6 md:p-10 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-stretch bg-white/30">
+            <div class="md:col-span-7 lg:col-span-8 relative rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-xl border-2 md:border-4 border-white aspect-[4/3] md:aspect-auto min-h-[300px] md:min-h-[450px] bg-gray-50 flex items-center justify-center">
               <div id="imageSpinner" class="absolute inset-0 flex flex-col items-center justify-center gap-3 z-0 bg-gray-50/50">
                  <span class="material-symbols-outlined animate-spin text-4xl text-[#e26215]/30">sync</span>
               </div>
               <img id="breedImage" src="${localImageUrl}" alt="${breedClean}" onload="document.getElementById('imageSpinner').style.display='none'" onerror="this.onerror=null; this.src='${backendImageUrl || mapImageUrl || 'images/logo.png'}'; if(this.src.includes('logo.png')) document.getElementById('imageSpinner').style.display='none';" class="absolute inset-0 w-full h-full object-cover z-10" />
               <div class="absolute inset-0 bg-gradient-to-t from-[#2d1810]/80 via-transparent to-transparent z-20"></div>
-              <div class="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-8 z-30">
-                 <div class="px-4 py-3 md:px-8 md:py-5 rounded-[1.2rem] md:rounded-[2rem] bg-[#1a0f08]/60 backdrop-blur-xl border border-white/20 text-white flex items-center justify-between">
-                   <span class="text-[9px] md:text-[12px] font-black uppercase tracking-[0.2em]">Visual Match</span>
-                   <span class="text-xs md:text-lg font-mono font-bold text-[#ff9a56]">#${Math.floor(Math.random()*9000)+1000}</span>
+              <div class="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-30">
+                 <div class="px-4 py-3 md:px-6 md:py-4 rounded-[1.2rem] md:rounded-[1.5rem] bg-[#1a0f08]/60 backdrop-blur-xl border border-white/20 text-white flex items-center justify-between">
+                   <span class="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em]">Visual ID</span>
+                   <span class="text-xs md:text-base font-mono font-bold text-[#ff9a56]">#${Math.floor(Math.random()*9000)+1000}</span>
                  </div>
               </div>
             </div>
 
-            <div class="lg:col-span-4 flex flex-col gap-4 md:gap-6">
+            <div class="md:col-span-5 lg:col-span-4 flex flex-col gap-4 md:gap-5">
               <div class="grid grid-cols-1 gap-4">
-                <div class="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/60 shadow-sm">
-                  <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Origin</span>
-                  <span class="text-base md:text-xl font-bold text-[#2d1810]">${desc.origin || "Global"}</span>
+                <div class="bg-white rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-white/60 shadow-sm">
+                  <span class="text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Origin</span>
+                  <span class="text-base md:text-lg font-bold text-[#2d1810]">${desc.origin || "Global"}</span>
                 </div>
-                <div class="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/60 shadow-sm">
-                  <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Biometrics</span>
-                  <span class="text-base md:text-xl font-bold text-[#2d1810]">${desc.size || "Standard"}</span>
+                <div class="bg-white rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-white/60 shadow-sm">
+                  <span class="text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Biometrics</span>
+                  <span class="text-base md:text-lg font-bold text-[#2d1810]">${desc.size || "Standard"}</span>
                 </div>
               </div>
-              <div class="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/60 shadow-sm flex-1">
-                <span class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Temperament</span>
+              <div class="bg-white rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-white/60 shadow-sm flex-1">
+                <span class="text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-black text-[#e26215] block mb-1">Temperament</span>
                 <span class="text-base font-bold text-[#2d1810] leading-relaxed">${desc.temperament || "Alert"}</span>
               </div>
-              <div class="bg-gradient-to-br from-[#fef9f6] to-white rounded-2xl md:rounded-3xl p-5 md:p-8 border border-[#e26215]/10">
+              <div class="bg-gradient-to-br from-[#fef9f6] to-white rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-[#e26215]/10">
                 <div class="flex flex-wrap gap-2">
-                  ${(desc.traits || []).map(trait => `<span class="px-3 py-1 bg-[#e26215]/10 text-[#e26215] rounded-lg text-[9px] font-black tracking-widest uppercase border border-[#e26215]/20">${trait}</span>`).join("")}
+                  ${(desc.traits || []).map(trait => `<span class="px-3 py-1 bg-[#e26215]/10 text-[#e26215] rounded-lg text-[9px] md:text-[10px] font-black tracking-widest uppercase border border-[#e26215]/20">${trait}</span>`).join("")}
                 </div>
               </div>
-              <div class="bg-gradient-to-br from-[#1a0f08] to-[#2d1810] rounded-2xl md:rounded-3xl p-5 md:p-8 text-white shadow-xl relative overflow-hidden">
-                <h4 class="font-poppins font-black text-[9px] md:text-[11px] mb-2 uppercase text-[#e26215]">Health Protocol</h4>
-                <p class="text-white/80 text-xs md:text-sm font-medium relative z-10">${desc.health_notes || "Regular veterinary diagnostics recommended."}</p>
+              <div class="bg-gradient-to-br from-[#1a0f08] to-[#2d1810] rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 text-white shadow-xl relative overflow-hidden">
+                <h4 class="font-poppins font-black text-[9px] md:text-[10px] mb-1 uppercase text-[#e26215]">Health Protocol</h4>
+                <p class="text-white/80 text-xs md:text-sm font-medium relative z-10">${desc.health_notes || "Veterinary diagnostics recommended."}</p>
               </div>
             </div>
           </div>
