@@ -263,24 +263,24 @@ fileUpload.addEventListener("change", async function () {
         <!-- Single Unified Premium Card -->
         <div class="relative w-full rounded-[2.5rem] bg-white/70 backdrop-blur-2xl border border-white shadow-[0_20px_60px_-15px_rgba(226,98,21,0.15)] overflow-hidden">
           
-          <!-- Top Header Section -->
-          <div class="p-8 md:p-10 border-b border-white flex flex-col md:flex-row items-center gap-8 justify-between relative overflow-hidden bg-gradient-to-br from-white to-transparent">
+          <!-- Top Header Section (Re-balanced for Perfect Symmetry) -->
+          <div class="p-8 md:p-12 border-b border-white grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-10 md:gap-16 relative overflow-hidden bg-gradient-to-br from-white to-transparent min-h-[220px]">
             <!-- Subtle background glow -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#e26215]/10 to-[#f15a24]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
 
-            <div class="flex-1 text-center md:text-left z-10">
-              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#e26215]/10 text-[#e26215] text-[9px] font-black tracking-[0.25em] uppercase mb-4 shadow-sm border border-[#e26215]/20">Biometric Match Found</div>
-              <h2 class="font-poppins font-black text-4xl md:text-5xl mb-4 text-[#2d1810] tracking-tighter uppercase glitch-text leading-none drop-shadow-sm">
+            <div class="text-center md:text-left z-10">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e26215]/10 text-[#e26215] text-[9px] font-black tracking-[0.25em] uppercase mb-5 shadow-sm border border-[#e26215]/20">Biometric Match Found</div>
+              <h2 class="font-poppins font-black text-4xl md:text-5xl lg:text-6xl mb-5 text-[#2d1810] tracking-tighter uppercase glitch-text leading-[0.9] drop-shadow-sm">
                 ${breedClean}
               </h2>
-              <p class="text-[#8a4f2a] text-base md:text-lg leading-relaxed font-medium opacity-90 max-w-lg">
+              <p class="text-[#8a4f2a] text-base md:text-lg leading-relaxed font-medium opacity-90 max-w-xl">
                 ${desc.short_desc}
               </p>
             </div>
             
-            <div class="shrink-0 z-10">
-              <!-- Confidence HUD -->
-              <div class="relative w-36 h-36 flex items-center justify-center">
+            <div class="flex justify-center md:justify-end z-10">
+              <!-- Confidence HUD - Perfectly Centered -->
+              <div class="relative w-40 h-40 md:w-44 md:h-44 flex items-center justify-center">
                 <div class="absolute inset-0 bg-gradient-to-br from-[#e26215]/20 to-[#f15a24]/20 rounded-full blur-xl animate-pulse"></div>
                 <svg class="absolute w-full h-full -rotate-90" viewBox="0 0 200 200">
                   <circle cx="100" cy="100" r="85" stroke="rgba(226,98,21,0.1)" stroke-width="12" fill="none"/>
@@ -296,8 +296,8 @@ fileUpload.addEventListener("change", async function () {
                   </defs>
                 </svg>
                 <div class="flex flex-col items-center relative z-10">
-                  <span class="text-4xl font-black text-[#2d1810] font-poppins drop-shadow-sm">${confidence}%</span>
-                  <span class="text-[9px] uppercase tracking-[0.2em] font-bold text-[#e26215]">Precision</span>
+                  <span class="text-4xl md:text-5xl font-black text-[#2d1810] font-poppins drop-shadow-sm">${confidence}%</span>
+                  <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-[#e26215]">Precision</span>
                 </div>
               </div>
             </div>
