@@ -15,6 +15,22 @@ console.log("API_BASE_URL:", API_BASE_URL);
 
 let uploadedFile = null;
 
+// Breed image URLs (reliable internet sources)
+const BREED_IMAGES = {
+  "dachshund": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Dachshund_Longhaired_001.jpg/1024px-Dachshund_Longhaired_001.jpg",
+  "chihuahua": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Chihuahua1.jpg/1024px-Chihuahua1.jpg",
+  "siberian_husky": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Siberian_Husky_blue_eyes_Flickr.jpg/1024px-Siberian_Husky_blue_eyes_Flickr.jpg",
+  "golden_retriever": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Golden_Retriever.jpg/1024px-Golden_Retriever.jpg",
+  "labrador_retriever": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Labrador_on_Quantock.jpg/1024px-Labrador_on_Quantock.jpg",
+  "german_shepherd": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/German_Shepherd_-_DSC_4797.JPG/1024px-German_Shepherd_-_DSC_4797.JPG",
+  "bulldog": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/English_Bulldog_ad1.jpg/1024px-English_Bulldog_ad1.jpg",
+  "poodle": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Apricot_Standard_Poodle.jpg/1024px-Apricot_Standard_Poodle.jpg",
+  "french_bulldog": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Frenchie_Isabella.JPG/1024px-Frenchie_Isabella.JPG",
+  "beagle": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Beagle_4.jpg/1024px-Beagle_4.jpg",
+  "rottweiler": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Rottweiler_standing.jpg/1024px-Rottweiler_standing.jpg",
+  "yorkshire_terrier": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Yorkshireterrier_Groom.jpg/1024px-Yorkshireterrier_Groom.jpg"
+};
+
 function animateElement(
   el,
   { opacity = [0, 1], translateY = [20, 0], duration = 600, delay = 0 } = {}
@@ -40,14 +56,39 @@ fileUpload.addEventListener("change", async function () {
 
   uploadedFile = file;
 
+  // Show progress bar loading UI
   preview.innerHTML = `
     <div class="w-full flex flex-col items-center mt-16" id="loadingBox">
-      <p class="text-xl text-[#7a3f1a] mb-8 animate-pulse">Analyzing your dog's breed with PawPrint AI...</p>
+      <p class="text-xl text-[#7a3f1a] mb-12 animate-pulse">🔍 Analyzing your dog's breed...</p>
+      
+      <!-- Progress Bar -->
+      <div class="w-80 mb-8">
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-sm font-semibold text-[#e26215]">Scanning</span>
+          <span class="text-sm font-bold text-[#e26215]" id="progressPercent">0%</span>
+        </div>
+        <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden shadow-md">
+          <div id="progressBar" class="h-full bg-gradient-to-r from-[#e26215] to-[#ff9a56] rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Animated spinner -->
       <div class="relative w-[100px] h-[100px] flex items-center justify-center">
         <div class="w-16 h-16 border-4 border-[#e26215] border-t-transparent rounded-full animate-spin"></div>
       </div>
     </div>
   `;
+
+  // Simulate progress
+  let progress = 0;
+  const progressInterval = setInterval(() => {
+    if (progress < 90) {
+      progress += Math.random() * 30;
+      if (progress > 90) progress = 90;
+    }
+    document.getElementById("progressBar").style.width = progress + "%";
+    document.getElementById("progressPercent").textContent = Math.round(progress) + "%";
+  }, 200);
 
   const form = new FormData();
   form.append("image", file);
@@ -57,6 +98,8 @@ fileUpload.addEventListener("change", async function () {
       method: "POST",
       body: form,
     });
+
+    clearInterval(progressInterval);
 
     if (!res.ok) {
       const text = await res.text();
@@ -76,6 +119,10 @@ fileUpload.addEventListener("change", async function () {
       return;
     }
 
+    // Complete progress
+    document.getElementById("progressBar").style.width = "100%";
+    document.getElementById("progressPercent").textContent = "100%";
+
     const top = data.predictions[0];
     const confidence = Math.round(top.confidence * 100);
     const desc = top.description || {
@@ -84,8 +131,10 @@ fileUpload.addEventListener("change", async function () {
       fun_fact: "No fun fact available.",
     };
     const breedClean = top.breed.replace(/_/g, " ").toUpperCase();
+    const breedKey = top.breed.toLowerCase();
 
-    const exampleImg = `static/breed_examples/${top.breed}.jpg`;
+    // Use internet image URL or fallback
+    const breedImageUrl = BREED_IMAGES[breedKey] || `static/breed_examples/${top.breed}.jpg`;
 
     preview.innerHTML = `
       <div class="flex flex-col items-center gap-10 w-full max-w-[1000px] mt-12 mx-auto" id="resultBox">
@@ -145,14 +194,14 @@ fileUpload.addEventListener("change", async function () {
         </div>
 
         <div class="flex flex-col items-center gap-6 mt-4">
-             <img id="breedImage" src="${exampleImg}" alt="${breedClean}"
+             <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
                 onerror="this.src='images/logo.png'"
                 class="w-[400px] h-[260px] object-cover rounded-2xl shadow-xl border-4 border-[#e26215]" />
             
             <button id="generatePdfBtn" data-breed="${breedClean}"
                 class="btn-ghost font-poppins font-bold text-[18px] px-10 py-4 rounded-full border-4 border-[#e26215] bg-transparent text-[#e26215] transition-all hover:bg-[#e26215] hover:text-white flex items-center justify-center gap-3">
                 <span class="material-symbols-outlined hidden" id="pdfSpinner">autorenew</span>
-                <span id="pdfBtnText">GENERATE PDF REPORT</span>
+                <span id="pdfBtnText">📄 GENERATE PDF REPORT</span>
             </button>
         </div>
 
@@ -192,7 +241,7 @@ fileUpload.addEventListener("change", async function () {
           console.error(e);
           alert("Error connecting to PDF generator.");
         } finally {
-          btnText.innerText = "GENERATE PDF REPORT";
+          btnText.innerText = "📄 GENERATE PDF REPORT";
           spinner.classList.remove("animate-spin");
           spinner.classList.add("hidden");
           this.disabled = false;
