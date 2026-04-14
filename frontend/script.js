@@ -248,7 +248,7 @@ fileUpload.addEventListener("change", async function () {
     const breedClean = top.breed.replace(/_/g, " ").toUpperCase();
     
     // ULTIMATE IMAGE RESOLUTION LOGIC: 
-    // 1. Try Local File (fastest, most reliable)
+    // 1. Try Local File (static assets)
     // 2. Try Backend Database URL (Wikimedia thumb)
     // 3. Try Hardcoded Map (extra safety)
     // 4. Fallback to logo
