@@ -314,7 +314,6 @@ fileUpload.addEventListener("change", async function () {
                  <div class="px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold uppercase tracking-widest">Visual Match Scan #${Math.floor(Math.random()*9000)+1000}</div>
               </div>
             </div>
-
             <!-- Health Considerations - Professional Alert Style -->
             <div class="bg-gradient-to-br from-[#1a0f08] to-[#2d1810] rounded-[2.5rem] p-10 text-white shadow-xl relative overflow-hidden">
               <div class="absolute top-0 right-0 p-8 opacity-10">
