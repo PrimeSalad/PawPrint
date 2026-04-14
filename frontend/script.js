@@ -248,8 +248,8 @@ fileUpload.addEventListener("change", async function () {
     const breedClean = top.breed.replace(/_/g, " ").toUpperCase();
     const breedKey = top.breed.toLowerCase();
 
-    // Use internet image URL or fallback
-    const breedImageUrl = BREED_IMAGES[breedKey] || `static/breed_examples/${top.breed}.jpg`;
+    // FIXED IMAGE LOGIC: Prioritize backend URL -> fallback to local maps/files
+    const breedImageUrl = desc.image_url || BREED_IMAGES[breedKey] || `static/breed_examples/${top.breed}.jpg`;
 
     preview.innerHTML = `
       <div class="flex flex-col items-center w-full max-w-4xl mx-auto py-8" id="resultBox">
@@ -301,7 +301,7 @@ fileUpload.addEventListener("change", async function () {
           <div class="p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch bg-white/30">
             
             <!-- Left: Image -->
-            <div class="relative rounded-[2rem] overflow-hidden shadow-lg group/img border-4 border-white aspect-[4/3] md:aspect-auto md:h-full min-h-[350px]">
+            <div class="relative rounded-[2rem] overflow-hidden shadow-lg group/img border-4 border-white aspect-[4/3] md:aspect-auto md:h-full min-h-[350px] bg-gray-100">
               <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
                 onerror="this.src='images/logo.png'"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-105" />
