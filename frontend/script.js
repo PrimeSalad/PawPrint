@@ -246,10 +246,16 @@ fileUpload.addEventListener("change", async function () {
       fun_fact: "Every dog has a unique genetic signature that our AI decodes.",
     };
     const breedClean = top.breed.replace(/_/g, " ").toUpperCase();
-    const breedKey = top.breed.toLowerCase();
-
-    // FIXED IMAGE LOGIC: Prioritize backend URL -> fallback to local maps/files
-    const breedImageUrl = desc.image_url || BREED_IMAGES[breedKey] || `static/breed_examples/${top.breed}.jpg`;
+    
+    // ULTIMATE IMAGE RESOLUTION LOGIC: 
+    // 1. Try Local File (fastest, most reliable)
+    // 2. Try Backend Database URL (Wikimedia thumb)
+    // 3. Try Hardcoded Map (extra safety)
+    // 4. Fallback to logo
+    const localImageUrl = `static/breed_examples/${top.breed}.jpg`;
+    const backendImageUrl = desc.image_url;
+    const breedKey = top.breed.toLowerCase().replace(/-/g, "_");
+    const mapImageUrl = BREED_IMAGES[breedKey];
 
     preview.innerHTML = `
       <div class="flex flex-col items-center w-full max-w-4xl mx-auto py-8" id="resultBox">
@@ -300,13 +306,22 @@ fileUpload.addEventListener("change", async function () {
           <!-- Content Grid -->
           <div class="p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch bg-white/30">
             
-            <!-- Left: Image -->
-            <div class="relative rounded-[2rem] overflow-hidden shadow-lg group/img border-4 border-white aspect-[4/3] md:aspect-auto md:h-full min-h-[350px] bg-gray-100">
-              <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
-                onerror="this.src='images/logo.png'"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-105" />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#2d1810]/60 via-transparent to-transparent"></div>
-              <div class="absolute bottom-5 left-5 right-5">
+            <!-- Left: Image (High Fidelity) -->
+            <div class="relative rounded-[2rem] overflow-hidden shadow-lg group/img border-4 border-white aspect-[4/3] md:aspect-auto md:h-full min-h-[350px] bg-gray-50 flex items-center justify-center">
+              
+              <!-- Image Loading Spinner -->
+              <div id="imageSpinner" class="absolute inset-0 flex flex-col items-center justify-center gap-3 z-0 bg-gray-50/50">
+                 <span class="material-symbols-outlined animate-spin text-4xl text-[#e26215]/30">sync</span>
+                 <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Loading High-Res Visual</span>
+              </div>
+
+              <img id="breedImage" src="${localImageUrl}" alt="${breedClean}"
+                onload="document.getElementById('imageSpinner').style.display='none'"
+                onerror="this.onerror=null; this.src='${backendImageUrl || mapImageUrl || 'images/logo.png'}'; if(this.src.includes('logo.png')) document.getElementById('imageSpinner').style.display='none';"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-105 z-10" />
+              
+              <div class="absolute inset-0 bg-gradient-to-t from-[#2d1810]/60 via-transparent to-transparent z-20"></div>
+              <div class="absolute bottom-5 left-5 right-5 z-30">
                  <div class="px-5 py-3 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 text-white shadow-lg flex items-center justify-between">
                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-90">Scan ID</span>
                    <span class="text-xs font-mono font-bold tracking-widest text-[#ff9a56]">#${Math.floor(Math.random()*9000)+1000}</span>

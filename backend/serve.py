@@ -247,11 +247,12 @@ def preprocess_image(image_stream):
 
 def get_breed_info(breed):
     """Get breed information from comprehensive local database (all 122 breeds)."""
-    breed_key = breed.lower()
+    # Normalize: lowercase and replace hyphens with underscores to match database keys
+    breed_key = breed.lower().replace("-", "_")
     if breed_key in BREED_DATABASE:
         return BREED_DATABASE[breed_key]
     
-    # Fallback for unknown breeds
+    # Fallback for unknown breeds (using a direct Commons link for reliability)
     return {
         "short_desc": f"The {breed.replace('_', ' ')} is a recognized canine breed known for its distinct features.",
         "traits": ["Loyal", "Energetic", "Companion"],
@@ -260,7 +261,7 @@ def get_breed_info(breed):
         "size": "Variable",
         "temperament": "Varies by individual dog",
         "health_notes": "Consult a veterinarian for breed-specific health information",
-        "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Beagle_4.jpg/1024px-Beagle_4.jpg"
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Beagle_4.jpg"
     }
 
 
