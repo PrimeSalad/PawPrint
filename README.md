@@ -1,27 +1,32 @@
-# PawPrint - AI Dog Breed Classifier
+# PawPrint - AI Dog Breed Classifier ✨
 
-PawPrint is an advanced dog breed classification application that uses Deep Learning (TensorFlow) for visual recognition and Gemini AI for detailed breed insights.
+PawPrint is a premium dog breed classification application that uses Deep Learning (TensorFlow Lite) for high-accuracy visual recognition and a comprehensive local database for detailed breed insights.
+
+## Features
+- **Instant Breed Recognition**: High-accuracy classification using a custom TensorFlow Lite model supporting 122 dog breeds.
+- **GOD MODE Premium UI**: Professional, high-fidelity user interface with biometric scanning animations and real-time visual feedback.
+- **Comprehensive Local Database**: Detailed insights for 122 breeds, including history, traits, fun facts, origin, size, temperament, and health notes.
+- **Internet-Ready Photos**: Reliable, high-quality breed images sourced from Wikimedia Commons.
+- **Professional PDF Reports**: Generate and download detailed analytical reports for any detected breed.
+- **Zero-Latency Insights**: No external AI API dependencies, ensuring lightning-fast results and 100% privacy.
 
 ## Project Structure
-- **`/frontend`**: Modern, responsive UI built with Tailwind CSS and Vite.
-- **`/backend`**: Flask-based API serving predictions and integrating Gemini AI.
+- **`/frontend`**: Premium UI built with Tailwind CSS, featuring advanced scanning animations and high-fidelity layout.
+- **`/backend`**: Flask-based API serving predictions using TFLite and a 122-breed comprehensive local database.
 
 ## Setup Instructions
 
 ### Backend Setup
 1. Navigate to `/backend`.
 2. Install dependencies: `pip install -r requirements.txt`.
-3. Create a `.env` file and add your `GEMINI_API_KEY`.
-4. Run the server: `python serve.py`.
+3. Run the server: `python serve.py`.
 
 ### Frontend Setup
-1. Navigate to `/frontend`.
-2. Install dependencies: `npm install`.
-3. Start the development server: `npm run dev`.
-4. Open the provided local URL (usually `http://localhost:5173`) in your browser.
+1. Open `frontend/index.html` in your browser (no build step required for static serving).
+2. Ensure the backend is running for prediction functionality.
 
-## Features
-- **Instant Breed Recognition**: High-accuracy classification using a custom TensorFlow model.
-- **Gemini AI Insights**: Dynamic generation of breed history, traits, and fun facts.
-- **Modern UI**: Fast and responsive interface using Vite and Tailwind CSS.
-- **Printable Reports**: Save your results as a PDF or print them directly from the browser.
+## Technical Details
+- **ML Model**: TensorFlow Lite (.tflite) for optimized on-device or server-side inference.
+- **Data Source**: Custom-built `breed_database.py` containing curated data for all supported labels.
+- **Animations**: CSS-driven biometric scanning effects and premium HUD visualizations.
+- **PDF Generation**: Powered by ReportLab for professional-grade document creation.
