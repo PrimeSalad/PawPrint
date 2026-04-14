@@ -68,8 +68,8 @@ fileUpload.addEventListener("change", async function () {
         <div class="relative bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl">
           <!-- Header -->
           <div class="text-center mb-8">
-            <h2 class="text-2xl font-bold text-[#2d1810] font-poppins mb-2">Analyzing Breed</h2>
-            <p class="text-sm text-[#7a3f1a]/70">Advanced AI Recognition</p>
+            <h2 class="text-2xl font-bold text-[#2d1810] font-poppins mb-2">Analyzing Image</h2>
+            <p class="text-sm text-[#7a3f1a]/70">Processing with precision AI</p>
           </div>
 
           <!-- Animated scanner visualization -->
@@ -105,7 +105,7 @@ fileUpload.addEventListener("change", async function () {
 
           <!-- Status text -->
           <div class="text-center mt-6">
-            <p class="text-sm text-[#7a3f1a]/60 font-medium">Scanning image...</p>
+            <p class="text-sm text-[#7a3f1a]/60 font-medium">Analyzing breed characteristics...</p>
           </div>
         </div>
       </div>
@@ -187,72 +187,131 @@ fileUpload.addEventListener("change", async function () {
     const breedImageUrl = BREED_IMAGES[breedKey] || `static/breed_examples/${top.breed}.jpg`;
 
     preview.innerHTML = `
-      <div class="flex flex-col items-center gap-10 w-full max-w-[1000px] mt-12 mx-auto" id="resultBox">
+      <div class="flex flex-col items-center gap-8 w-full max-w-4xl mx-auto py-8" id="resultBox">
         
-        <div class="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
-            <div class="relative w-[180px] h-[180px] flex items-center justify-center flex-shrink-0">
-                <svg class="absolute w-full h-full -rotate-90">
-                    <circle cx="50%" cy="50%" r="80" stroke="#eee" stroke-width="12" fill="none"/>
-                    <circle id="progressCircle" cx="50%" cy="50%" r="80"
-                        stroke="#e26215" stroke-width="12" fill="none"
-                        stroke-linecap="round" stroke-dasharray="502.4" stroke-dashoffset="502.4"
-                        style="transition: stroke-dashoffset 1.5s ease-out"/>
+        <!-- Header Section with Confidence -->
+        <div class="w-full bg-gradient-to-r from-[#e26215] to-[#ff9a56] rounded-3xl p-8 text-white shadow-2xl">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+            <!-- Breed Title & Description -->
+            <div class="flex-1 text-center md:text-left">
+              <h2 class="font-poppins font-extrabold text-4xl md:text-5xl mb-3 leading-tight">
+                ${breedClean}
+              </h2>
+              <p class="text-white/90 text-lg leading-relaxed max-w-md">
+                ${desc.short_desc}
+              </p>
+            </div>
+            
+            <!-- Confidence Indicator -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="relative w-32 h-32 flex items-center justify-center">
+                <svg class="absolute w-full h-full -rotate-90" viewBox="0 0 200 200">
+                  <circle cx="100" cy="100" r="90" stroke="rgba(255,255,255,0.3)" stroke-width="8" fill="none"/>
+                  <circle id="progressCircle" cx="100" cy="100" r="90"
+                    stroke="white" stroke-width="8" fill="none"
+                    stroke-linecap="round" stroke-dasharray="565.5" stroke-dashoffset="565.5"
+                    style="transition: stroke-dashoffset 1.5s ease-out"/>
                 </svg>
                 <div class="flex flex-col items-center">
-                    <span class="text-4xl font-bold text-[#e26215]">${confidence}%</span>
-                    <span class="text-sm font-semibold uppercase text-[#7a3f1a]">Match</span>
+                  <span class="text-5xl font-bold">${confidence}%</span>
+                  <span class="text-xs uppercase tracking-widest font-semibold">Confidence</span>
                 </div>
+              </div>
             </div>
-
-            <div class="flex flex-col items-center md:items-start text-center md:text-left gap-4">
-                <h3 class="font-poppins font-extrabold text-[32px] md:text-[42px] text-[#e26215] leading-tight">
-                    ${breedClean}
-                </h3>
-                <p class="text-[18px] text-[#555] max-w-[500px] leading-relaxed">
-                    ${desc.short_desc}
-                </p>
-            </div>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-            <div class="bg-white p-8 rounded-2xl shadow-lg border border-[#eee]">
-                <h4 class="font-bold text-[#e26215] text-xl mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined">pets</span> Key Traits
-                </h4>
-                <ul class="space-y-3">
-                    ${(desc.traits || [])
-                      .map(
-                        (trait) => `
-                        <li class="flex items-center gap-3 text-[#555]">
-                            <span class="w-2 h-2 bg-[#e26215] rounded-full"></span>
-                            ${trait}
-                        </li>
-                    `
-                      )
-                      .join("")}
-                </ul>
-            </div>
-
-            <div class="bg-[#fef9f6] p-8 rounded-2xl shadow-lg border border-[#fbd6bc]">
-                <h4 class="font-bold text-[#e26215] text-xl mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined">lightbulb</span> Fun Fact
-                </h4>
-                <p class="text-[#7a3f1a] italic leading-relaxed">
-                    "${desc.fun_fact}"
-                </p>
-            </div>
+        <!-- Image Section -->
+        <div class="w-full">
+          <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
+            onerror="this.src='images/logo.png'"
+            class="w-full h-80 object-cover rounded-3xl shadow-2xl border-2 border-[#e26215]/20" />
         </div>
 
-        <div class="flex flex-col items-center gap-6 mt-4">
-             <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
-                onerror="this.src='images/logo.png'"
-                class="w-[400px] h-[260px] object-cover rounded-2xl shadow-xl border-4 border-[#e26215]" />
-            
-            <button id="generatePdfBtn" data-breed="${breedClean}"
-                class="btn-ghost font-poppins font-bold text-[18px] px-10 py-4 rounded-full border-4 border-[#e26215] bg-transparent text-[#e26215] transition-all hover:bg-[#e26215] hover:text-white flex items-center justify-center gap-3">
-                <span class="material-symbols-outlined hidden" id="pdfSpinner">autorenew</span>
-                <span id="pdfBtnText">📄 GENERATE PDF REPORT</span>
-            </button>
+        <!-- Details Grid -->
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Key Traits Card -->
+          <div class="bg-white rounded-2xl p-8 shadow-lg border border-[#e26215]/10 hover:shadow-xl transition-shadow">
+            <h3 class="font-poppins font-bold text-xl text-[#2d1810] mb-6 uppercase tracking-wide">
+              Key Traits
+            </h3>
+            <ul class="space-y-3">
+              ${(desc.traits || [])
+                .map(
+                  (trait) => \`
+                  <li class="flex items-center gap-3 text-[#555] text-base">
+                    <span class="w-3 h-3 bg-gradient-to-r from-[#e26215] to-[#ff9a56] rounded-full flex-shrink-0"></span>
+                    \${trait}
+                  </li>
+                \`
+                )
+                .join("")}
+            </ul>
+          </div>
+
+          <!-- Fun Fact Card -->
+          <div class="bg-gradient-to-br from-[#fef9f6] to-[#fce5d8] rounded-2xl p-8 shadow-lg border border-[#fbd6bc] hover:shadow-xl transition-shadow">
+            <h3 class="font-poppins font-bold text-xl text-[#2d1810] mb-6 uppercase tracking-wide">
+              Did You Know
+            </h3>
+            <p class="text-[#7a3f1a] text-base leading-relaxed italic">
+              ${desc.fun_fact}
+            </p>
+          </div>
+        </div>
+
+        <!-- Breed Information Details -->
+        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Origin -->
+          <div class="bg-white rounded-2xl p-6 shadow-lg border border-[#e26215]/10">
+            <h4 class="font-poppins font-bold text-sm text-[#e26215] uppercase tracking-widest mb-3">
+              Origin
+            </h4>
+            <p class="text-[#555] text-base leading-relaxed">
+              ${desc.origin || "Not specified"}
+            </p>
+          </div>
+
+          <!-- Size -->
+          <div class="bg-white rounded-2xl p-6 shadow-lg border border-[#e26215]/10">
+            <h4 class="font-poppins font-bold text-sm text-[#e26215] uppercase tracking-widest mb-3">
+              Size
+            </h4>
+            <p class="text-[#555] text-base leading-relaxed">
+              ${desc.size || "Not specified"}
+            </p>
+          </div>
+
+          <!-- Temperament -->
+          <div class="bg-white rounded-2xl p-6 shadow-lg border border-[#e26215]/10">
+            <h4 class="font-poppins font-bold text-sm text-[#e26215] uppercase tracking-widest mb-3">
+              Temperament
+            </h4>
+            <p class="text-[#555] text-base leading-relaxed">
+              ${desc.temperament || "Not specified"}
+            </p>
+          </div>
+        </div>
+
+        <!-- Health Notes -->
+        <div class="w-full bg-blue-50 border-l-4 border-blue-400 rounded-lg p-6">
+          <h4 class="font-poppins font-bold text-blue-900 mb-3 uppercase tracking-wide">
+            Health Considerations
+          </h4>
+          <p class="text-blue-800 text-base leading-relaxed">
+            ${desc.health_notes || "Consult a veterinarian for breed-specific health information"}
+          </p>
+        </div>
+
+        <!-- PDF Button -->
+        <div class="w-full flex justify-center">
+          <button id="generatePdfBtn" data-breed="${breedClean}"
+            class="font-poppins font-bold text-lg px-12 py-4 rounded-full bg-gradient-to-r from-[#e26215] to-[#ff9a56] text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
+            <span class="material-symbols-outlined hidden text-2xl animate-spin" id="pdfSpinner">sync</span>
+            <span id="pdfBtnText">Generate PDF Report</span>
+          </button>
         </div>
 
       </div>
