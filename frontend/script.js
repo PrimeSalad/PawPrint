@@ -248,11 +248,11 @@ fileUpload.addEventListener("change", async function () {
     const breedClean = top.breed.replace(/_/g, " ").toUpperCase();
     
     // ULTIMATE IMAGE RESOLUTION LOGIC: 
-    // 1. Try Local File (static assets)
+    // 1. Try Local File (Vite public root)
     // 2. Try Backend Database URL (Wikimedia thumb)
     // 3. Try Hardcoded Map (extra safety)
     // 4. Fallback to logo
-    const localImageUrl = `static/breed_examples/${top.breed}.jpg`;
+    const localImageUrl = `breed_examples/${top.breed}.jpg`;
     const backendImageUrl = desc.image_url;
     const breedKey = top.breed.toLowerCase().replace(/-/g, "_");
     const mapImageUrl = BREED_IMAGES[breedKey];
