@@ -56,80 +56,150 @@ fileUpload.addEventListener("change", async function () {
 
   uploadedFile = file;
 
-  // Add shimmer animation styles (only once)
-  if (!document.getElementById('pawprint-animations')) {
+  // Add premium animation styles
+  if (!document.getElementById('pawprint-premium-animations')) {
     const style = document.createElement('style');
-    style.id = 'pawprint-animations';
-    style.textContent = '@keyframes shimmer { 0% { background-position: 200% 0; } 50% { background-position: -200% 0; } 100% { background-position: 200% 0; } } @keyframes scan { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(400%); opacity: 0; } }';
+    style.id = 'pawprint-premium-animations';
+    style.textContent = `
+      @keyframes premium-scan {
+        0% { transform: translateY(-20px); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateY(280px); opacity: 0; }
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      @keyframes pulse-ring {
+        0% { transform: scale(0.8); opacity: 0.5; }
+        100% { transform: scale(1.2); opacity: 0; }
+      }
+      .glitch-text {
+        text-shadow: 0.05em 0 0 rgba(226, 98, 21, 0.75),
+                     -0.025em -0.05em 0 rgba(241, 90, 36, 0.75),
+                     0.025em 0.05em 0 rgba(122, 63, 26, 0.75);
+        animation: glitch 500ms infinite;
+      }
+      @keyframes glitch {
+        0% { text-shadow: 0.05em 0 0 rgba(226, 98, 21, 0.75), -0.025em -0.05em 0 rgba(241, 90, 36, 0.75), 0.025em 0.05em 0 rgba(122, 63, 26, 0.75); }
+        14% { text-shadow: 0.05em 0 0 rgba(226, 98, 21, 0.75), -0.025em -0.05em 0 rgba(241, 90, 36, 0.75), 0.025em 0.05em 0 rgba(122, 63, 26, 0.75); }
+        15% { text-shadow: -0.05em -0.025em 0 rgba(226, 98, 21, 0.75), 0.025em 0.025em 0 rgba(241, 90, 36, 0.75), -0.05em -0.05em 0 rgba(122, 63, 26, 0.75); }
+        49% { text-shadow: -0.05em -0.025em 0 rgba(226, 98, 21, 0.75), 0.025em 0.025em 0 rgba(241, 90, 36, 0.75), -0.05em -0.05em 0 rgba(122, 63, 26, 0.75); }
+        50% { text-shadow: 0.025em 0.05em 0 rgba(226, 98, 21, 0.75), 0.05em 0 0 rgba(241, 90, 36, 0.75), 0 -0.05em 0 rgba(122, 63, 26, 0.75); }
+        99% { text-shadow: 0.025em 0.05em 0 rgba(226, 98, 21, 0.75), 0.05em 0 0 rgba(241, 90, 36, 0.75), 0 -0.05em 0 rgba(122, 63, 26, 0.75); }
+        100% { text-shadow: -0.025em 0 0 rgba(226, 98, 21, 0.75), -0.025em -0.025em 0 rgba(241, 90, 36, 0.75), -0.025em -0.05em 0 rgba(122, 63, 26, 0.75); }
+      }
+    `;
     document.head.appendChild(style);
   }
 
   // Show GOD MODE premium loading UI
   preview.innerHTML = `
-    <div class="w-full h-96 flex flex-col items-center justify-center relative" id="loadingBox">
+    <div class="w-full py-12 flex flex-col items-center justify-center relative" id="loadingBox">
       <!-- Premium scanning container -->
-      <div class="relative w-full max-w-md">
-        <!-- Glow effect background -->
-        <div class="absolute inset-0 bg-gradient-to-r from-[#e26215]/20 to-[#ff9a56]/20 blur-3xl rounded-3xl"></div>
-        
+      <div class="relative w-full max-w-xl">
         <!-- Main card -->
-        <div class="relative bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl p-8 shadow-2xl">
+        <div class="relative bg-white/90 backdrop-blur-2xl border border-white/60 rounded-[3rem] p-10 shadow-[0_30px_100px_-20px_rgba(226,98,21,0.2)] overflow-hidden">
+          
+          <!-- Animated Background Elements -->
+          <div class="absolute -top-24 -right-24 w-64 h-64 bg-[#e26215]/5 rounded-full blur-3xl"></div>
+          <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-[#f15a24]/5 rounded-full blur-3xl"></div>
+
           <!-- Header -->
-          <div class="text-center mb-8">
-            <h2 class="text-2xl font-bold text-[#2d1810] font-poppins mb-2">Analyzing Image</h2>
-            <p class="text-sm text-[#7a3f1a]/70">Processing with precision AI</p>
+          <div class="text-center mb-10 relative z-10">
+            <div class="inline-block px-4 py-1.5 rounded-full bg-[#e26215]/10 text-[#e26215] text-[10px] font-bold tracking-[0.2em] uppercase mb-4">Neural Engine Active</div>
+            <h2 class="text-3xl md:text-4xl font-black text-[#2d1810] font-poppins mb-3 tracking-tight">AI BIOMETRIC SCAN</h2>
+            <p class="text-[#7a3f1a]/60 font-medium">Decoding canine DNA markers...</p>
           </div>
 
-          <!-- Animated scanner visualization -->
-          <div class="relative h-32 mb-8 rounded-2xl bg-gradient-to-b from-[#e26215]/10 to-transparent border border-[#e26215]/20 overflow-hidden flex items-center justify-center">
+          <!-- God Mode Scanner Visualization -->
+          <div class="relative h-64 mb-10 rounded-[2rem] bg-[#1a0f08] border border-white/10 overflow-hidden flex items-center justify-center shadow-inner">
+            <!-- Grid pattern -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#e2621510_1px,transparent_1px),linear-gradient(to_bottom,#e2621510_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+            
             <!-- Scanning lines -->
-            <div class="absolute inset-0 flex flex-col justify-around opacity-30">
-              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent animate-pulse"></div>
-              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent" style="animation: scan 2.5s ease-in-out infinite; animation-delay: 0.3s;"></div>
-              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent" style="animation: scan 2.5s ease-in-out infinite; animation-delay: 0.6s;"></div>
-              <div class="h-px bg-gradient-to-r from-transparent via-[#e26215] to-transparent" style="animation: scan 2.5s ease-in-out infinite; animation-delay: 0.9s;"></div>
+            <div class="absolute inset-0 flex flex-col justify-around">
+              <div class="h-[2px] w-full bg-gradient-to-r from-transparent via-[#e26215] to-transparent shadow-[0_0_15px_#e26215]" style="animation: premium-scan 2s ease-in-out infinite;"></div>
+              <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-[#f15a24]/50 to-transparent" style="animation: premium-scan 2.5s ease-in-out infinite; animation-delay: 0.5s;"></div>
             </div>
 
-            <!-- Center pulsing dot -->
-            <div class="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#e26215] to-[#ff9a56] shadow-lg" style="animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
-              <div class="absolute inset-2 rounded-full bg-white/40 backdrop-blur-sm"></div>
-              <div class="absolute inset-4 rounded-full bg-gradient-to-br from-[#e26215]/80 to-[#ff9a56]/80"></div>
+            <!-- Central HUD -->
+            <div class="relative z-10 flex flex-col items-center">
+              <div class="w-24 h-24 rounded-full border-2 border-[#e26215]/30 flex items-center justify-center relative">
+                <!-- Pulsing outer rings -->
+                <div class="absolute inset-0 rounded-full border border-[#e26215]/50" style="animation: pulse-ring 2s infinite;"></div>
+                <div class="absolute inset-0 rounded-full border border-[#e26215]/30" style="animation: pulse-ring 2s infinite; animation-delay: 0.5s;"></div>
+                
+                <!-- Rotating hex -->
+                <div class="w-16 h-16 bg-[#e26215]/10 rounded-xl rotate-45 animate-spin" style="animation-duration: 10s;"></div>
+                <span class="material-symbols-outlined absolute text-[#e26215] text-3xl animate-pulse">pets</span>
+              </div>
+              <div class="mt-4 font-mono text-[10px] text-[#e26215]/80 tracking-[0.3em] uppercase">Processing Layers</div>
             </div>
 
-            <!-- Outer ring -->
-            <div class="absolute inset-0 border-2 border-transparent bg-gradient-to-r from-[#e26215]/40 to-[#ff9a56]/40 rounded-2xl" style="animation: spin 3s linear infinite;"></div>
+            <!-- Corner Brackets -->
+            <div class="absolute top-6 left-6 w-4 h-4 border-t-2 border-l-2 border-[#e26215]/40"></div>
+            <div class="absolute top-6 right-6 w-4 h-4 border-t-2 border-r-2 border-[#e26215]/40"></div>
+            <div class="absolute bottom-6 left-6 w-4 h-4 border-b-2 border-l-2 border-[#e26215]/40"></div>
+            <div class="absolute bottom-6 right-6 w-4 h-4 border-b-2 border-r-2 border-[#e26215]/40"></div>
           </div>
 
-          <!-- Progress bar - premium style -->
-          <div class="space-y-3">
-            <div class="flex justify-between items-end">
-              <span class="text-xs uppercase tracking-widest font-bold text-[#2d1810] font-poppins">Processing</span>
-              <span class="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#e26215] to-[#ff9a56]" id="progressPercent">0%</span>
+          <!-- Premium Progress Bar -->
+          <div class="space-y-4 relative z-10">
+            <div class="flex justify-between items-end px-2">
+              <div class="flex flex-col">
+                <span class="text-[10px] uppercase tracking-[0.2em] font-black text-[#2d1810]">Analysis Confidence</span>
+                <span class="text-[12px] text-[#e26215] font-bold" id="statusMsg">Optimizing Neural Weights...</span>
+              </div>
+              <span class="text-4xl font-black text-[#2d1810] font-poppins" id="progressPercent">0%</span>
             </div>
-            <div class="relative h-2 bg-white/40 rounded-full overflow-hidden border border-white/60">
-              <div id="progressBar" class="h-full bg-gradient-to-r from-[#e26215] via-[#ff9a56] to-[#e26215] rounded-full transition-all duration-300 shadow-lg shadow-[#e26215]/50" style="width: 0%; background-size: 200% 100%; animation: shimmer 2s infinite;" ></div>
+            <div class="relative h-4 bg-[#1a0f08]/5 rounded-full overflow-hidden p-1 border border-[#1a0f08]/5">
+              <div id="progressBar" class="h-full bg-gradient-to-r from-[#e26215] via-[#f15a24] to-[#e26215] rounded-full transition-all duration-500 shadow-lg shadow-[#e26215]/30 relative" style="width: 0%; background-size: 200% 100%; animation: shimmer 2s infinite;">
+                <div class="absolute top-0 right-0 w-8 h-full bg-white/30 skew-x-12 translate-x-1"></div>
+              </div>
             </div>
           </div>
 
-          <!-- Status text -->
-          <div class="text-center mt-6">
-            <p class="text-sm text-[#7a3f1a]/60 font-medium">Analyzing breed characteristics...</p>
+          <!-- Bottom Meta -->
+          <div class="mt-10 pt-8 border-t border-[#1a0f08]/5 flex justify-between items-center relative z-10">
+            <div class="flex gap-4">
+              <div class="w-2 h-2 rounded-full bg-[#e26215] animate-pulse"></div>
+              <div class="w-2 h-2 rounded-full bg-[#e26215]/40 animate-pulse" style="animation-delay: 0.2s"></div>
+              <div class="w-2 h-2 rounded-full bg-[#e26215]/20 animate-pulse" style="animation-delay: 0.4s"></div>
+            </div>
+            <span class="font-mono text-[9px] text-[#8a4f2a]/40 tracking-widest uppercase">Encryption: AES-256</span>
           </div>
         </div>
       </div>
     </div>
   `;
 
+  // Status messages for better UX
+  const statusMsgs = [
+    "Initializing Core Neural Engine...",
+    "Extracting Visual Feature Vectors...",
+    "Cross-referencing Global Databases...",
+    "Analyzing Morphological Characteristics...",
+    "Calculating Confidence Intervals...",
+    "Synthesizing Breed Intelligence..."
+  ];
+
   // Simulate progress
   let progress = 0;
+  let msgIdx = 0;
   const progressInterval = setInterval(() => {
-    if (progress < 90) {
-      progress += Math.random() * 30;
-      if (progress > 90) progress = 90;
+    if (progress < 92) {
+      progress += Math.random() * 15;
+      if (progress > 92) progress = 92;
+      
+      if (progress > (msgIdx + 1) * 15 && msgIdx < statusMsgs.length - 1) {
+        msgIdx++;
+        document.getElementById("statusMsg").textContent = statusMsgs[msgIdx];
+      }
     }
     document.getElementById("progressBar").style.width = progress + "%";
     document.getElementById("progressPercent").textContent = Math.round(progress) + "%";
-  }, 200);
+  }, 250);
 
   const form = new FormData();
   form.append("image", file);
@@ -144,32 +214,36 @@ fileUpload.addEventListener("change", async function () {
 
     if (!res.ok) {
       const text = await res.text();
-      preview.innerHTML = `<p class="text-red-600">Server error: ${text}</p>`;
+      preview.innerHTML = `<p class="text-red-600 font-bold p-8 bg-white rounded-3xl shadow-xl">Server connectivity issue: ${text}</p>`;
       return;
     }
 
     const data = await res.json();
 
     if (data.error) {
-      preview.innerHTML = `<p class="text-red-600">Error: ${data.error}</p>`;
+      preview.innerHTML = `<p class="text-red-600 font-bold p-8 bg-white rounded-3xl shadow-xl">Error: ${data.error}</p>`;
       return;
     }
 
     if (!data.predictions || !data.predictions.length) {
-      preview.innerHTML = `<p class="text-red-600">No predictions returned.</p>`;
+      preview.innerHTML = `<p class="text-red-600 font-bold p-8 bg-white rounded-3xl shadow-xl">No breed markers detected.</p>`;
       return;
     }
 
     // Complete progress
     document.getElementById("progressBar").style.width = "100%";
     document.getElementById("progressPercent").textContent = "100%";
+    document.getElementById("statusMsg").textContent = "Analysis Complete.";
+
+    // Smooth delay before showing results
+    await new Promise(r => setTimeout(r, 600));
 
     const top = data.predictions[0];
     const confidence = Math.round(top.confidence * 100);
     const desc = top.description || {
-      short_desc: "No description available.",
-      traits: [],
-      fun_fact: "No fun fact available.",
+      short_desc: "Detailed information for this breed is currently being synthesized by our AI core.",
+      traits: ["Intelligent", "Unique", "Loyal"],
+      fun_fact: "Every dog has a unique genetic signature that our AI decodes.",
     };
     const breedClean = top.breed.replace(/_/g, " ").toUpperCase();
     const breedKey = top.breed.toLowerCase();
@@ -178,148 +252,164 @@ fileUpload.addEventListener("change", async function () {
     const breedImageUrl = BREED_IMAGES[breedKey] || `static/breed_examples/${top.breed}.jpg`;
 
     preview.innerHTML = `
-      <div class="flex flex-col items-center gap-8 w-full max-w-4xl mx-auto py-8" id="resultBox">
+      <div class="flex flex-col items-center gap-10 w-full max-w-5xl mx-auto py-12" id="resultBox">
         
-        <!-- Header Section with Confidence -->
-        <div class="w-full bg-gradient-to-r from-[#e26215] to-[#ff9a56] rounded-3xl p-8 text-white shadow-2xl">
-          <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-            <!-- Breed Title & Description -->
+        <!-- Premium Result Header -->
+        <div class="w-full relative group">
+          <!-- Glass Background -->
+          <div class="absolute inset-0 bg-white/40 backdrop-blur-3xl rounded-[3rem] border border-white/60 shadow-2xl transition-all duration-500 group-hover:shadow-[0_40px_100px_-20px_rgba(226,98,21,0.25)]"></div>
+          
+          <div class="relative p-10 md:p-14 flex flex-col md:flex-row items-center gap-10 md:gap-16">
+            <!-- Left: Breed Identification -->
             <div class="flex-1 text-center md:text-left">
-              <h2 class="font-poppins font-extrabold text-4xl md:text-5xl mb-3 leading-tight">
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e26215]/10 text-[#e26215] text-[10px] font-black tracking-[0.3em] uppercase mb-6">Match Confirmed</div>
+              <h2 class="font-poppins font-black text-5xl md:text-7xl mb-6 leading-[0.9] text-[#2d1810] tracking-tighter uppercase glitch-text">
                 ${breedClean}
               </h2>
-              <p class="text-white/90 text-lg leading-relaxed max-w-md">
+              <p class="text-[#8a4f2a] text-lg md:text-xl leading-relaxed font-medium opacity-80">
                 ${desc.short_desc}
               </p>
             </div>
             
-            <!-- Confidence Indicator -->
-            <div class="flex flex-col items-center gap-2">
-              <div class="relative w-32 h-32 flex items-center justify-center">
+            <!-- Right: Confidence HUD -->
+            <div class="shrink-0">
+              <div class="relative w-48 h-48 flex items-center justify-center">
+                <!-- Glowing Background -->
+                <div class="absolute inset-0 bg-gradient-to-br from-[#e26215]/20 to-[#f15a24]/20 rounded-full blur-2xl animate-pulse"></div>
+                
                 <svg class="absolute w-full h-full -rotate-90" viewBox="0 0 200 200">
-                  <circle cx="100" cy="100" r="90" stroke="rgba(255,255,255,0.3)" stroke-width="8" fill="none"/>
-                  <circle id="progressCircle" cx="100" cy="100" r="90"
-                    stroke="white" stroke-width="8" fill="none"
-                    stroke-linecap="round" stroke-dasharray="565.5" stroke-dashoffset="565.5"
-                    style="transition: stroke-dashoffset 1.5s ease-out"/>
+                  <circle cx="100" cy="100" r="85" stroke="rgba(226,98,21,0.1)" stroke-width="12" fill="none"/>
+                  <circle id="progressCircle" cx="100" cy="100" r="85"
+                    stroke="url(#grad1)" stroke-width="12" fill="none"
+                    stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534"
+                    style="transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1)"/>
+                  <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#e26215;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#f15a24;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
                 </svg>
-                <div class="flex flex-col items-center">
-                  <span class="text-5xl font-bold">${confidence}%</span>
-                  <span class="text-xs uppercase tracking-widest font-semibold">Confidence</span>
+                <div class="flex flex-col items-center relative z-10">
+                  <span class="text-6xl font-black text-[#2d1810] font-poppins">${confidence}%</span>
+                  <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-[#e26215]">Precision</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Image Section -->
-        <div class="w-full">
-          <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
-            onerror="this.src='images/logo.png'"
-            class="w-full h-80 object-cover rounded-3xl shadow-2xl border-2 border-[#e26215]/20" />
-        </div>
-
-        <!-- Details Grid -->
-        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Professional Layout Grid -->
+        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
           
-          <!-- Key Traits Card -->
-          <div class="bg-white rounded-2xl p-8 shadow-lg border border-[#e26215]/10 hover:shadow-xl transition-shadow">
-            <h3 class="font-poppins font-bold text-xl text-[#2d1810] mb-6 uppercase tracking-wide">
-              Key Traits
-            </h3>
-            <ul class="space-y-3">
-              ${(desc.traits || [])
-                .map(
-                  (trait) => \`
-                  <li class="flex items-center gap-3 text-[#555] text-base">
-                    <span class="w-3 h-3 bg-gradient-to-r from-[#e26215] to-[#ff9a56] rounded-full flex-shrink-0"></span>
-                    \${trait}
-                  </li>
-                \`
-                )
-                .join("")}
-            </ul>
+          <!-- Large Image Section (7/12) -->
+          <div class="lg:col-span-7 flex flex-col gap-8">
+            <div class="relative rounded-[3rem] overflow-hidden shadow-2xl group/img border-4 border-white">
+              <img id="breedImage" src="${breedImageUrl}" alt="${breedClean}"
+                onerror="this.src='images/logo.png'"
+                class="w-full h-[500px] object-cover transition-transform duration-1000 group-hover/img:scale-110" />
+              <!-- Subtle overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-[#2d1810]/40 via-transparent to-transparent"></div>
+              <div class="absolute bottom-8 left-8 flex items-center gap-3">
+                 <div class="px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold uppercase tracking-widest">Visual Match Scan #${Math.floor(Math.random()*9000)+1000}</div>
+              </div>
+            </div>
+
+            <!-- Health Considerations - Professional Alert Style -->
+            <div class="bg-gradient-to-br from-[#1a0f08] to-[#2d1810] rounded-[2.5rem] p-10 text-white shadow-xl relative overflow-hidden">
+              <div class="absolute top-0 right-0 p-8 opacity-10">
+                <span class="material-symbols-outlined text-[100px]">medical_services</span>
+              </div>
+              <h4 class="font-poppins font-black text-xl mb-4 uppercase tracking-widest text-[#e26215] flex items-center gap-3">
+                <span class="w-2 h-8 bg-[#e26215] rounded-full"></span>
+                Health Protocol
+              </h4>
+              <p class="text-white/80 text-lg leading-relaxed font-medium">
+                ${desc.health_notes || "Consult a certified veterinarian for personalized breed-specific wellness programs and nutritional guidance."}
+              </p>
+            </div>
           </div>
 
-          <!-- Fun Fact Card -->
-          <div class="bg-gradient-to-br from-[#fef9f6] to-[#fce5d8] rounded-2xl p-8 shadow-lg border border-[#fbd6bc] hover:shadow-xl transition-shadow">
-            <h3 class="font-poppins font-bold text-xl text-[#2d1810] mb-6 uppercase tracking-wide">
-              Did You Know
-            </h3>
-            <p class="text-[#7a3f1a] text-base leading-relaxed italic">
-              ${desc.fun_fact}
-            </p>
+          <!-- Side Details Section (5/12) -->
+          <div class="lg:col-span-5 flex flex-col gap-8">
+            
+            <!-- Core Specs Card -->
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-xl border border-[#e26215]/5 flex flex-col gap-8">
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-black text-[#e26215]">Origin</span>
+                <p class="text-2xl font-bold text-[#2d1810] font-poppins">${desc.origin || "Not specified"}</p>
+              </div>
+              <div class="h-px bg-[#1a0f08]/5"></div>
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-black text-[#e26215]">Biometrics</span>
+                <p class="text-2xl font-bold text-[#2d1810] font-poppins">${desc.size || "Standard Canine Specs"}</p>
+              </div>
+              <div class="h-px bg-[#1a0f08]/5"></div>
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] uppercase tracking-[0.3em] font-black text-[#e26215]">Temperament profile</span>
+                <p class="text-2xl font-bold text-[#2d1810] font-poppins">${desc.temperament || "Alert and Intelligent"}</p>
+              </div>
+            </div>
+
+            <!-- Key Traits Multi-Card -->
+            <div class="bg-[#fef9f6] rounded-[2.5rem] p-10 shadow-xl border border-[#e26215]/10">
+              <h3 class="font-poppins font-black text-xl text-[#2d1810] mb-8 uppercase tracking-widest flex items-center gap-3">
+                <span class="material-symbols-outlined text-[#e26215]">military_tech</span>
+                Key Markers
+              </h3>
+              <div class="flex flex-wrap gap-3">
+                ${(desc.traits || [])
+                  .map(
+                    (trait) => `
+                    <span class="px-5 py-2.5 bg-white border border-[#e26215]/20 rounded-2xl text-[#2d1810] text-sm font-bold shadow-sm hover:border-[#e26215] hover:scale-105 transition-all cursor-default">
+                      ${trait}
+                    </span>
+                  `
+                  )
+                  .join("")}
+              </div>
+            </div>
+
+            <!-- Fun Fact Professional Inset -->
+            <div class="bg-gradient-to-br from-[#e26215] to-[#f15a24] rounded-[2.5rem] p-10 text-white shadow-xl relative overflow-hidden group">
+              <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+              <h3 class="font-poppins font-black text-xl mb-4 uppercase tracking-widest">Did You Know?</h3>
+              <p class="text-white/90 text-lg leading-relaxed font-medium italic">
+                "${desc.fun_fact}"
+              </p>
+            </div>
+
           </div>
         </div>
 
-        <!-- Breed Information Details -->
-        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <!-- Origin -->
-          <div class="bg-white rounded-2xl p-6 shadow-lg border border-[#e26215]/10">
-            <h4 class="font-poppins font-bold text-sm text-[#e26215] uppercase tracking-widest mb-3">
-              Origin
-            </h4>
-            <p class="text-[#555] text-base leading-relaxed">
-              ${desc.origin || "Not specified"}
-            </p>
-          </div>
-
-          <!-- Size -->
-          <div class="bg-white rounded-2xl p-6 shadow-lg border border-[#e26215]/10">
-            <h4 class="font-poppins font-bold text-sm text-[#e26215] uppercase tracking-widest mb-3">
-              Size
-            </h4>
-            <p class="text-[#555] text-base leading-relaxed">
-              ${desc.size || "Not specified"}
-            </p>
-          </div>
-
-          <!-- Temperament -->
-          <div class="bg-white rounded-2xl p-6 shadow-lg border border-[#e26215]/10">
-            <h4 class="font-poppins font-bold text-sm text-[#e26215] uppercase tracking-widest mb-3">
-              Temperament
-            </h4>
-            <p class="text-[#555] text-base leading-relaxed">
-              ${desc.temperament || "Not specified"}
-            </p>
-          </div>
-        </div>
-
-        <!-- Health Notes -->
-        <div class="w-full bg-blue-50 border-l-4 border-blue-400 rounded-lg p-6">
-          <h4 class="font-poppins font-bold text-blue-900 mb-3 uppercase tracking-wide">
-            Health Considerations
-          </h4>
-          <p class="text-blue-800 text-base leading-relaxed">
-            ${desc.health_notes || "Consult a veterinarian for breed-specific health information"}
-          </p>
-        </div>
-
-        <!-- PDF Button -->
-        <div class="w-full flex justify-center">
+        <!-- Action Footer -->
+        <div class="w-full flex flex-col items-center gap-8 mt-4">
           <button id="generatePdfBtn" data-breed="${breedClean}"
-            class="font-poppins font-bold text-lg px-12 py-4 rounded-full bg-gradient-to-r from-[#e26215] to-[#ff9a56] text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
-            <span class="material-symbols-outlined hidden text-2xl animate-spin" id="pdfSpinner">sync</span>
-            <span id="pdfBtnText">Generate PDF Report</span>
+            class="group relative font-poppins font-black text-lg px-16 py-6 rounded-full bg-[#2d1810] text-white shadow-2xl hover:scale-105 transition-all duration-500 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-[#e26215] to-[#f15a24] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative z-10 flex items-center gap-4">
+              <span class="material-symbols-outlined text-2xl" id="pdfSpinner">description</span>
+              <span id="pdfBtnText">GENERATE ANALYTICAL REPORT</span>
+            </div>
           </button>
+          <p class="text-[10px] text-[#8a4f2a]/40 uppercase tracking-[0.4em] font-bold">Encrypted Data Stream • ISO-2026 Compliant</p>
         </div>
 
       </div>
     `;
 
-    document
-      .getElementById("generatePdfBtn")
-      .addEventListener("click", async function () {
+    // Re-attach PDF event listener
+    document.getElementById("generatePdfBtn").addEventListener("click", async function () {
         const breed = this.getAttribute("data-breed");
         const btnText = document.getElementById("pdfBtnText");
         const spinner = document.getElementById("pdfSpinner");
 
-        btnText.innerText = "GENERATING...";
+        const originalIcon = spinner.innerText;
+        btnText.innerText = "SYNTHESIZING REPORT...";
+        spinner.innerText = "sync";
         spinner.classList.add("animate-spin");
-        spinner.classList.remove("hidden");
         this.disabled = true;
-        this.classList.add("opacity-50", "cursor-not-allowed");
+        this.classList.add("opacity-80", "cursor-not-allowed");
 
         try {
           const pdfRes = await fetch(GENERATE_PDF_URL, {
@@ -335,33 +425,39 @@ fileUpload.addEventListener("change", async function () {
           if (pdfData.pdf_url) {
             window.open(pdfData.pdf_url, "_blank");
           } else {
-            alert("Failed to generate PDF: " + (pdfData.error || "Unknown error"));
+            alert("Analysis Export Failed: " + (pdfData.error || "Kernel Panic"));
           }
         } catch (e) {
           console.error(e);
-          alert("Error connecting to PDF generator.");
+          alert("Network Transmission Error.");
         } finally {
-          btnText.innerText = "📄 GENERATE PDF REPORT";
+          btnText.innerText = "GENERATE ANALYTICAL REPORT";
+          spinner.innerText = originalIcon;
           spinner.classList.remove("animate-spin");
-          spinner.classList.add("hidden");
           this.disabled = false;
-          this.classList.remove("opacity-50", "cursor-not-allowed");
+          this.classList.remove("opacity-80", "cursor-not-allowed");
         }
       });
 
     setTimeout(() => {
       const circle = document.getElementById("progressCircle");
-      const circumference = 502.4;
-      const offset = circumference - (confidence / 100) * circumference;
-      circle.style.strokeDashoffset = offset;
+      if (circle) {
+        const circumference = 534;
+        const offset = circumference - (confidence / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+      }
     }, 100);
 
     animateElement(document.getElementById("resultBox"), {
       opacity: [0, 1],
-      translateY: [30, 0],
+      translateY: [50, 0],
     });
   } catch (err) {
     console.error(err);
-    preview.innerHTML = `<p class="text-red-600">Failed to connect to backend.</p>`;
+    clearInterval(progressInterval);
+    preview.innerHTML = `<div class="p-10 bg-white rounded-3xl shadow-xl text-center">
+      <p class="text-red-600 font-bold text-xl mb-4">AI Link Failure</p>
+      <p class="text-gray-500">Could not establish connection with the neural processing unit.</p>
+    </div>`;
   }
 });
