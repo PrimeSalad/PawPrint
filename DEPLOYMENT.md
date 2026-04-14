@@ -4,6 +4,7 @@
 - **Frontend**: Deployed on Vercel
 - **Backend**: Deployed on Render
 - **Model**: TFLite (2.54 MB), tracked with Git LFS
+- **Breed DB**: Local database (no external APIs)
 
 ## Prerequisites
 - Render account
@@ -38,13 +39,8 @@ If automatic detection doesn't work:
    - **Start Command**: `gunicorn --bind 0.0.0.0:$PORT serve:app --timeout 120 --workers 2`
    - **Root Directory**: `backend`
 
-### Step 3: Set Environment Variables on Render
-
-In your Render service dashboard:
-1. Go to Environment
-2. Add: `GEMINI_API_KEY=<your-gemini-key>`
-
-(You can get a free key from [Google AI Studio](https://aistudio.google.com/apikey))
+### Step 3: NO Environment Variables Needed
+The backend now uses a local breed database. No `GEMINI_API_KEY` is required!
 
 ### Step 4: Verify Backend is Running
 Wait for deployment to complete, then test:
@@ -56,9 +52,9 @@ Expected response:
 ```json
 {
   "status": "online",
-  "engine": "TFLite CPU + Gemini API",
+  "engine": "TFLite CPU + Local Breed DB",
   "model_loaded": true,
-  "gemini_active": true
+  "version": "2.0"
 }
 ```
 
@@ -87,7 +83,7 @@ If your Render URL is different from `https://pawprint-backend.onrender.com`, up
 
 1. Go to your Vercel domain (e.g., `https://pawprint.vercel.app`)
 2. Upload a dog image
-3. Verify the prediction works and shows the breed
+3. Verify the prediction works and shows the breed with local breed info
 
 ## Troubleshooting
 
@@ -95,7 +91,7 @@ If your Render URL is different from `https://pawprint-backend.onrender.com`, up
 - Check Render logs: Your service → Logs
 - Look for "CRITICAL" messages during startup
 - Ensure `dog_model.tflite` file is present (check Git LFS status)
-- Verify `requirements.txt` includes `tflite-runtime`
+- Verify `requirements.txt` includes `tflite-runtime` or `tensorflow`
 
 ### Model Takes Too Long to Load
 - Render free tier has limited resources
@@ -126,8 +122,8 @@ git push -u origin main
 PawPrint/
 ├── backend/
 │   ├── render.yaml          ← Render deployment config
-│   ├── requirements.txt      ← Python dependencies
-│   ├── serve.py            ← Flask application
+│   ├── requirements.txt      ← Python dependencies (no Gemini!)
+│   ├── serve.py            ← Flask application with local breed DB
 │   ├── dog_model.tflite     ← ML Model (2.54 MB)
 │   └── labels.json         ← Class labels
 ├── frontend/
@@ -142,6 +138,7 @@ PawPrint/
 - **Model Loading**: ~5-10 seconds on Render free tier
 - **Prediction**: ~2-3 seconds per image
 - **Memory**: TFLite runtime optimized for low-memory environments
+- **Breed Info**: Loaded locally, no API latency
 
 ## Support
 
@@ -149,4 +146,4 @@ For issues:
 1. Check Render logs for backend errors
 2. Check Vercel Function logs for proxy errors
 3. Check browser console for frontend errors
-4. Verify environment variables are set correctly
+4. Verify backend is running with: `curl https://your-backend/`

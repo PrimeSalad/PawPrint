@@ -28,7 +28,6 @@ if tflite is None:
 from flask import Flask, request, jsonify, url_for, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv
-import google.generativeai as genai
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -37,9 +36,10 @@ from reportlab.lib import colors
 # -----------------------------
 # FLASK APP & CONFIG
 # -----------------------------
+# ✂ REMOVED: import google.generativeai as genai (Line 31)
+# ✂ REMOVED: GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") (Line 42)
 load_dotenv()
 PORT = int(os.getenv("PORT", 5000))
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 app = Flask(__name__, static_folder="static")
 
@@ -52,15 +52,71 @@ def add_cors(response):
 
 CORS(app)
 
-# Configure Gemini
-model_gemini = None
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model_gemini = genai.GenerativeModel("gemini-1.5-flash")
-        print("Gemini AI configured for descriptions.")
-    except Exception as e:
-        print(f"Gemini configuration failed: {e}")
+# Breed information database (replaces Gemini)
+BREED_INFO = {
+    "dachshund": {
+        "short_desc": "The Dachshund is a small hound breed known for its distinctive elongated body and short legs. Originally bred to hunt badgers, they are energetic, intelligent, and loyal companions.",
+        "traits": ["Clever", "Courageous", "Friendly", "Curious"],
+        "fun_fact": "Their name means 'badger dog' in German, reflecting their original hunting purpose."
+    },
+    "chihuahua": {
+        "short_desc": "The Chihuahua is the smallest dog breed, known for its tiny size but big personality. Despite their delicate appearance, they are spirited and confident companions.",
+        "traits": ["Sassy", "Loyal", "Energetic", "Alert"],
+        "fun_fact": "Chihuahuas can have soft or smooth coats and are famous for their trembling when cold or excited."
+    },
+    "siberian_husky": {
+        "short_desc": "The Siberian Husky is a large, energetic sled dog breed known for its striking appearance with ice-blue eyes and thick double coat. They are pack-oriented and require plenty of exercise.",
+        "traits": ["Energetic", "Friendly", "Independent", "Pack-Oriented"],
+        "fun_fact": "Huskies have a double coat that sheds heavily twice a year, requiring regular grooming."
+    },
+    "golden_retriever": {
+        "short_desc": "The Golden Retriever is a large, friendly dog breed known for their intelligence and gentle temperament. They are excellent family pets and are highly trainable.",
+        "traits": ["Intelligent", "Friendly", "Devoted", "Outgoing"],
+        "fun_fact": "Golden Retrievers were originally bred in Scotland to retrieve game birds during hunting."
+    },
+    "labrador_retriever": {
+        "short_desc": "The Labrador Retriever is a large, athletic dog breed known for their friendly nature and exceptional training ability. They excel as service and therapy dogs.",
+        "traits": ["Outgoing", "Even-Tempered", "Intelligent", "Loyal"],
+        "fun_fact": "Labs come in three colors: black, yellow, and chocolate, each equally recognized and valued."
+    },
+    "german_shepherd": {
+        "short_desc": "The German Shepherd is a large, intelligent working dog breed known for their versatility and loyalty. They excel in police, military, and search-and-rescue roles.",
+        "traits": ["Confident", "Intelligent", "Loyal", "Alert"],
+        "fun_fact": "German Shepherds are one of the most versatile working dogs, used in military and police worldwide."
+    },
+    "bulldog": {
+        "short_desc": "The Bulldog is a medium-sized breed known for their stocky build, wrinkled face, and gentle disposition. Despite their intimidating appearance, they are affectionate and loyal.",
+        "traits": ["Gentle", "Courageous", "Affectionate", "Stubborn"],
+        "fun_fact": "Bulldogs were originally bred for the cruel sport of bull-baiting in medieval England."
+    },
+    "poodle": {
+        "short_desc": "The Poodle is an intelligent, athletic dog breed available in three sizes (Standard, Miniature, Toy). They are known for their curly coat and exceptional trainability.",
+        "traits": ["Intelligent", "Active", "Elegant", "Obedient"],
+        "fun_fact": "Poodles have a hypoallergenic coat that sheds minimally, making them great for allergy sufferers."
+    },
+    "french_bulldog": {
+        "short_desc": "The French Bulldog is a small, muscular dog breed with a distinctive bat-like ears. They are playful, affectionate, and adapt well to various living situations.",
+        "traits": ["Playful", "Affectionate", "Adaptable", "Alert"],
+        "fun_fact": "Despite the name, French Bulldogs were actually developed in England as a smaller version of English Bulldogs."
+    },
+    "beagle": {
+        "short_desc": "The Beagle is a small scent hound breed known for their keen sense of smell and curious nature. They are pack dogs that enjoy family life and outdoor adventures.",
+        "traits": ["Curious", "Friendly", "Determined", "Merry"],
+        "fun_fact": "Beagles have approximately 220 million scent receptors, making them excellent at tracking."
+    },
+    "rottweiler": {
+        "short_desc": "The Rottweiler is a large, powerful dog breed known for their confident nature and protective instincts. When properly trained and socialized, they are loyal and loving companions.",
+        "traits": ["Confident", "Loyal", "Protective", "Intelligent"],
+        "fun_fact": "Rottweilers were originally used as herding dogs and later as cart-pulling dogs in Roman times."
+    },
+    "yorkshire_terrier": {
+        "short_desc": "The Yorkshire Terrier is a small terrier breed with long, silky coat and a big personality. They are confident, spirited companions that enjoy attention and playtime.",
+        "traits": ["Confident", "Spirited", "Affectionate", "Playful"],
+        "fun_fact": "Despite their delicate appearance, Yorkshire Terriers were originally bred to catch rats in mills."
+    }
+}
+
+print("[OK] Breed information database loaded (Gemini removed).")
 
 # -----------------------------
 # LOAD TFLITE MODEL
@@ -129,20 +185,12 @@ def preprocess_image(image_stream):
 
 
 def get_breed_info(breed):
-    """Get rich info from Gemini or fallback to hardcoded data."""
-    if model_gemini:
-        prompt = f"Provide information about the dog breed '{breed.replace('_', ' ')}'. " \
-                 "Return ONLY JSON with these keys: " \
-                 '{"short_desc": "...", "traits": ["trait1", "trait2", "trait3"], "fun_fact": "..."}'
-        try:
-            response = model_gemini.generate_content(prompt)
-            # Remove markdown code blocks if present
-            clean_text = response.text.strip().replace("```json", "").replace("```", "")
-            return json.loads(clean_text)
-        except Exception as e:
-            print(f"Gemini description failed: {e}")
+    """Get breed information from local database (no API calls)."""
+    breed_key = breed.lower()
+    if breed_key in BREED_INFO:
+        return BREED_INFO[breed_key]
     
-    # Fallback data
+    # Fallback for unknown breeds
     return {
         "short_desc": f"The {breed.replace('_', ' ')} is a recognized canine breed known for its distinct features.",
         "traits": ["Loyal", "Energetic", "Companion"],
@@ -157,9 +205,9 @@ def get_breed_info(breed):
 def index():
     return jsonify({
         "status": "online", 
-        "engine": "TFLite CPU + Gemini API",
+        "engine": "TFLite CPU + Local Breed DB",
         "model_loaded": interpreter is not None,
-        "gemini_active": model_gemini is not None
+        "version": "2.0"
     })
 
 @app.route("/predict", methods=["POST"])
@@ -188,7 +236,7 @@ def predict():
         breed = idx_to_class.get(top_idx, "Unknown Breed")
         confidence = float(preds[top_idx])
 
-        # Get description (Gemini or Fallback)
+        # Get description from local breed database
         description = get_breed_info(breed)
         
         results = [{
